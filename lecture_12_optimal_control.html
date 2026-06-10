@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bewley Math Camp — Lecture 12: Optimal Control Theory</title>
+<style>
+:root{--navy:#0f1f3d;--blue:#1a3a6b;--accent:#2e7de0;--gold:#e8a020;--light-gold:#fef3dc;--green:#1a7a4a;--light-green:#d4f0e0;--red:#c0392b;--light-red:#fce8e6;--purple:#6d28d9;--light-purple:#ede9fe;--bg:#f4f6fa;--card:#fff;--text:#1a1a2e;--muted:#5a6680;--border:#dde2ef;--code-bg:#eef2fb;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Georgia,serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:16px;}
+.header{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;padding:28px 40px 22px;border-bottom:4px solid var(--gold);}
+.header-badge{font-family:Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+.header h1{font-size:26px;font-weight:normal;margin-bottom:4px;}
+.header .subtitle{font-size:14px;opacity:.75;font-style:italic;}
+.sec-nav{background:var(--card);border-bottom:2px solid var(--border);padding:0 24px;display:flex;gap:2px;overflow-x:auto;flex-wrap:wrap;}
+.sec-nav button{padding:12px 15px;border:none;background:none;font-size:13px;font-family:Arial,sans-serif;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .2s;}
+.sec-nav button:hover{color:var(--accent);}
+.sec-nav button.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:bold;}
+.main{max-width:920px;margin:0 auto;padding:28px 20px 60px;}
+.sec{display:none;}.sec.active{display:block;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:26px 30px;margin-bottom:22px;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.card-title{font-size:12px;font-family:Arial,sans-serif;font-weight:bold;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+h2{font-size:20px;color:var(--navy);margin-bottom:10px;font-weight:normal;}
+h3{font-size:17px;color:var(--blue);margin:16px 0 8px;}
+p{margin-bottom:11px;}
+.box{border-radius:8px;padding:15px 18px;margin:14px 0;font-size:15px;}
+.box.def{background:#e8f0fe;border-left:4px solid var(--accent);}
+.box.thm{background:var(--light-gold);border-left:4px solid var(--gold);}
+.box.ex{background:var(--light-green);border-left:4px solid var(--green);}
+.box.warn{background:var(--light-red);border-left:4px solid var(--red);}
+.box.int{background:var(--light-purple);border-left:4px solid var(--purple);}
+.box.rmk{background:#f0f4ff;border-left:4px solid #93c5fd;}
+.bl{font-family:Arial,sans-serif;font-size:11px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;}
+.bl.d{color:var(--accent);}.bl.t{color:#a06010;}.bl.e{color:var(--green);}.bl.w{color:var(--red);}.bl.i{color:var(--purple);}.bl.r{color:#3b82f6;}
+.math{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:14px 18px;margin:12px 0;font-family:'Courier New',monospace;font-size:14px;overflow-x:auto;line-height:2;}
+.steps{margin:12px 0;}
+.step{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sn{min-width:30px;height:30px;background:var(--accent);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;flex-shrink:0;margin-top:2px;}
+.sb{flex:1;}
+.quiz-q{font-size:16px;margin-bottom:14px;color:var(--navy);}
+.quiz-opts{display:grid;gap:9px;}
+.qopt{background:var(--bg);border:2px solid var(--border);border-radius:8px;padding:11px 16px;cursor:pointer;font-size:15px;transition:all .2s;font-family:Georgia,serif;text-align:left;}
+.qopt:hover{border-color:var(--accent);background:#e8f0fe;}
+.qopt.ok{border-color:var(--green);background:var(--light-green);}
+.qopt.no{border-color:var(--red);background:var(--light-red);}
+.qfb{margin-top:12px;padding:12px;border-radius:8px;display:none;font-size:14px;}
+.qfb.show{display:block;}
+.qfb.ok{background:var(--light-green);color:#0d5c34;border-left:4px solid var(--green);}
+.qfb.no{background:var(--light-red);color:#8b1a12;border-left:4px solid var(--red);}
+.qnxt{margin-top:12px;display:none;}.qnxt.show{display:block;}
+.btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:14px;font-family:Arial,sans-serif;cursor:pointer;transition:background .2s;}
+.btn:hover{background:var(--navy);}
+.btn.gold{background:var(--gold);color:var(--navy);}
+.score{font-family:Arial,sans-serif;font-size:14px;color:var(--muted);text-align:right;margin-bottom:8px;}
+ul.bl-list{margin:8px 0 8px 22px;line-height:2.1;}
+ol.nl{margin:8px 0 8px 22px;line-height:2.1;}
+.roadmap{display:flex;gap:0;margin:16px 0;overflow-x:auto;}
+.ri{flex:1;min-width:110px;text-align:center;position:relative;}
+.ri:not(:last-child)::after{content:'→';position:absolute;right:-8px;top:12px;color:var(--muted);font-size:16px;}
+.rb{background:var(--code-bg);border:2px solid var(--border);border-radius:8px;padding:9px 7px;font-size:12px;font-family:Arial,sans-serif;line-height:1.4;}
+.rb.cur{background:#e8f0fe;border-color:var(--accent);font-weight:bold;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0;}
+@media(max-width:600px){.two-col{grid-template-columns:1fr;}}
+.compare-box{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:14px 16px;font-size:14px;}
+.compare-box h4{font-family:Arial,sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;color:var(--muted);}
+table.gt{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px;}
+table.gt th{background:var(--navy);color:#fff;padding:9px 12px;text-align:left;font-weight:normal;font-family:Arial,sans-serif;font-size:13px;}
+table.gt td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+table.gt tr:nth-child(even) td{background:var(--bg);}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-badge">Yale Econ Math Camp · Bewley Notes 2020</div>
+  <h1>Lecture 12: Optimal Control Theory</h1>
+  <div class="subtitle">The Hamiltonian, Maximum Principle, Hamiltonian System, Hamilton-Jacobi-Bellman Equation &amp; Growth Model Application — directly from Bewley's notes</div>
+</div>
+
+<div class="sec-nav">
+  <button class="active" onclick="go(0)">📍 Overview</button>
+  <button onclick="go(1)">① The Problem Setup</button>
+  <button onclick="go(2)">② Deriving the Conditions</button>
+  <button onclick="go(3)">③ The Hamiltonian &amp; Maximum Principle</button>
+  <button onclick="go(4)">④ General Vector Case</button>
+  <button onclick="go(5)">⑤ Value Function &amp; HJB</button>
+  <button onclick="go(6)">⑥ Growth Model Example</button>
+  <button onclick="go(7)">⑦ Lecture 13: HJB Derivation</button>
+  <button onclick="go(8)">✅ Quiz</button>
+</div>
+
+<div class="main">
+
+<!-- ===== SECTION 0: OVERVIEW ===== -->
+<div class="sec active" id="s0">
+  <div class="card">
+    <div class="card-title">What Lecture 12 is About</div>
+    <h2>Optimal Control Theory: Continuous-Time Dynamic Optimization</h2>
+    <p>Optimal control theory is the continuous-time analogue of dynamic programming. Instead of a sequence of discrete decisions, the agent chooses a <em>function</em> u(t) over a time interval [0,T] to maximize an integral of payoffs, subject to a differential equation governing how the state x(t) evolves.</p>
+    <div class="box int"><div class="bl i">The Vehicle Analogy (from Bewley)</div>
+    Imagine driving an all-terrain vehicle from point x₀ to point x₁. At each moment t you choose direction and throttle u(t) ∈ U. Your position x(t) evolves according to dx/dt = g(x(t),u(t)) (different terrain = different g). Fuel consumption rate = f(x(t),u(t)). Goal: minimize total fuel ∫f dt. This is an optimal control problem.
+    </div>
+    <div class="roadmap">
+      <div class="ri"><div class="rb cur">Problem<br>Setup</div></div>
+      <div class="ri"><div class="rb">Discrete<br>Approx.</div></div>
+      <div class="ri"><div class="rb">Hamil-<br>tonian H</div></div>
+      <div class="ri"><div class="rb">Max<br>Principle</div></div>
+      <div class="ri"><div class="rb">Hamilton<br>System</div></div>
+      <div class="ri"><div class="rb">HJB<br>Equation</div></div>
+      <div class="ri"><div class="rb">Growth<br>Model</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Connection to Earlier Lectures</div>
+    <table class="gt">
+      <tr><th>Earlier Concept</th><th>Optimal Control Analogue</th></tr>
+      <tr><td>Lagrangian L(x,λ)</td><td>Hamiltonian H(x,u,λ) = f + λg</td></tr>
+      <tr><td>Lagrange multiplier λ (constant)</td><td>Costate variable λ(t) (function of time)</td></tr>
+      <tr><td>FOC: ∂L/∂x = 0</td><td>Hamiltonian system: dλ/dt = −∂H/∂x</td></tr>
+      <tr><td>Constraint: g(x) = ā</td><td>State equation: dx/dt = g(x,u)</td></tr>
+      <tr><td>KT conditions (inequality)</td><td>Maximum principle: u maximizes H</td></tr>
+      <tr><td>Bellman equation (discrete)</td><td>Hamilton-Jacobi-Bellman equation (continuous)</td></tr>
+      <tr><td>Shadow price ∂V/∂a = λ</td><td>Costate λ(t) = ∂V(x(t),t)/∂x</td></tr>
+    </table>
+    <button class="btn" onclick="go(1)">Begin Lecture →</button>
+  </div>
+</div>
+
+<!-- ===== SECTION 1: PROBLEM SETUP ===== -->
+<div class="sec" id="s1">
+  <div class="card">
+    <div class="card-title">Section 1</div>
+    <h2>The Optimal Control Problem</h2>
+    <div class="box def"><div class="bl d">Definition: Piecewise Continuous Function</div>
+    A function u : [0,T] → U is <strong>piecewise continuous</strong> if:
+    <ol class="nl">
+      <li>u is continuous except at a finite number of values of t, and</li>
+      <li>at each discontinuity t̄, both the left-hand limit lim_{t→t̄, t&lt;t̄} u(t) and the right-hand limit lim_{t→t̄, t>t̄} u(t) exist.</li>
+    </ol>
+    The set of admissible controls: 𝒜 = {u : [0,T] → U | T > 0 and u is piecewise continuous}. The control set U is a fixed closed subset of ℝᴷ; the end time T may be variable.
+    </div>
+    <div class="box ex"><div class="bl e">Non-Examples of Piecewise Continuity</div>
+    <ul class="bl-list">
+      <li>u(t) = 1/(1−t) for 0≤t&lt;1, u(t)=1 for t≥1 — NOT piecewise continuous because lim_{t→1⁻} u(t) = +∞ doesn't exist (finite)</li>
+      <li>u(t) = sin(t⁻¹) for 0&lt;t≤1, u(0)=0 — NOT piecewise continuous because lim_{t→0⁺} u(t) doesn't exist</li>
+    </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">The General Problem (Equation 12.1 in the notes)</div>
+    <div class="box thm"><div class="bl t">The Optimal Control Problem</div>
+    <div class="math">max_{u ∈ 𝒜} ∫₀ᵀ f(x(t), u(t)) dt
+
+subject to:
+  dx(t)/dt = g(x(t), u(t)),   for all t ∈ [0,T]
+  x(0) = x₀   (initial condition)
+  x(T) = x₁   (terminal condition)</div>
+    </div>
+    <p>The functions f : ℝᴺ × U → ℝ (instantaneous payoff) and gₙ : ℝᴺ × U → ℝ for n=1,…,N (state dynamics) are assumed continuously differentiable in x and continuous in u.</p>
+    <div class="two-col">
+      <div class="compare-box">
+        <h4>State Variable x(t)</h4>
+        <p>Describes the system at time t. Evolves according to the differential equation dx/dt = g(x,u). Examples: capital stock K(t), position x(t), pollution stock P(t).</p>
+      </div>
+      <div class="compare-box">
+        <h4>Control Variable u(t)</h4>
+        <p>The decision at each moment t. Chosen from the set U. Examples: consumption C(t), investment rate I(t), velocity and direction of vehicle.</p>
+      </div>
+    </div>
+    <div class="box int"><div class="bl i">Why Continuous Time?</div>
+    Many economic models are cleaner in continuous time: interest compounds continuously, capital depreciates continuously, and the Hamiltonian conditions are often more tractable than their discrete analogues. The Euler equation in discrete time becomes the costate evolution equation dλ/dt = −∂H/∂x in continuous time.
+    </div>
+  </div>
+  <div style="text-align:right;margin-top:8px;"><button class="btn" onclick="go(2)">Next: Deriving the Conditions →</button></div>
+</div>
+
+<!-- ===== SECTION 2: DERIVING CONDITIONS ===== -->
+<div class="sec" id="s2">
+  <div class="card">
+    <div class="card-title">Section 2</div>
+    <h2>Deriving Necessary Conditions via Discrete Approximation and Kuhn-Tucker</h2>
+    <p>Bewley derives the optimal control conditions in a non-rigorous but highly illuminating way: approximate the continuous-time problem by a discrete-time one with M time steps, apply the Kuhn-Tucker theorem, then take the limit as M→∞.</p>
+    <div class="box def"><div class="bl d">The Discrete Approximation (Equation 12.2)</div>
+    Divide [0,T] into M intervals of length Δt = T/M. The problem becomes:
+    <div class="math">max Σₘ₌₀ᴹ⁻¹ Δt · f(x(mΔt), u(mΔt))
+
+subject to:
+  x(mΔt) − x((m−1)Δt) ≤ Δt · g(x((m−1)Δt), u((m−1)Δt)),   m=1,…,M
+  x(0) ≤ x₀
+  −x(MΔt) ≤ −x₁</div>
+    The objective is a Riemann sum approximating ∫f dt. The constraints are inequalities (so Kuhn-Tucker applies).
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Applying the Kuhn-Tucker Theorem</div>
+    <p>Since f is concave and the constraint functions are convex, the KT theorem applies. It yields KT multipliers λ(0),…,λ(M) and β ≥ 0 with complementary slackness conditions, and the vector of controls and states maximizes the Lagrangian L (equation 12.3 in the notes).</p>
+    <h3>Summation by Parts (Discrete Integration by Parts)</h3>
+    <p>To simplify L, Bewley uses the discrete analogue of integration by parts. Recall the continuous version:</p>
+    <div class="math">∫₀ᵀ (dF/dt) G(t) dt = F(T)G(T) − F(0)G(0) − ∫₀ᵀ F(t)(dG/dt) dt</div>
+    <p>The discrete analogue (summation by parts) uses Leibniz's rule for first differences: Δ(xₘyₘ) = yₘ₊₁Δxₘ + xₘΔyₘ, which gives:</p>
+    <div class="math">Σₘ₌₁ᴹ Δ(xₘyₘ) = x_{M+1}y_{M+1} − x₁y₁ = Σₘ yₘ₊₁Δxₘ + Σₘ xₘΔyₘ</div>
+    <p>After applying summation by parts to the Lagrangian, it simplifies to a sum over m of terms:</p>
+    <div class="math">L = Σₘ₌₀ᴹ⁻¹ Δt [f(x(mΔt), u(mΔt)) + λ(m+1) g(x(mΔt), u(mΔt))]
+    + Σₘ₌₀ᴹ⁻¹ x(mΔt) Δλ(m) + [β − λ(M)] x(T)</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Taking the Limit as Δt → 0</div>
+    <p>Maximizing L over u(mΔt) gives (from 12.4): u(mΔt) maximizes f(x(mΔt),u) + λ(m+1)g(x(mΔt),u) over u ∈ U. Maximizing over x(mΔt) gives the first-order condition:</p>
+    <div class="math">[λ(m+1)−λ(m)] / Δt = −∂/∂x [f(x(mΔt), u(mΔt)) + λ(m+1)g(x(mΔt), u(mΔt))]</div>
+    <p>Letting Δt → 0 (m → ∞ with mΔt → t), assuming λ is differentiable:</p>
+    <div class="math">dλ(t)/dt = −∂/∂x [f(x(t), u(t)) + λ(t) g(x(t), u(t))]</div>
+    <p>And the constraint dx/dt = g(x,u) holds in the limit (constraints active at optimum). The control condition becomes: u(t) maximizes f(x(t),u) + λ(t)g(x(t),u) over u ∈ U for all t.</p>
+  </div>
+  <div style="text-align:right;margin-top:8px;"><button class="btn" onclick="go(3)">Next: The Hamiltonian →</button></div>
+</div>
+
+<!-- ===== SECTION 3: HAMILTONIAN ===== -->
+<div class="sec" id="s3">
+  <div class="card">
+    <div class="card-title">Section 3</div>
+    <h2>The Hamiltonian Function and the Maximum Principle</h2>
+    <div class="box def"><div class="bl d">Definition: The Hamiltonian Function</div>
+    The <strong>Hamiltonian</strong> is defined as:
+    <div class="math">H(x, u, λ) = f(x, u) + λ g(x, u)</div>
+    It is the continuous-time instantaneous analogue of the Lagrangian. It combines the instantaneous payoff f and the "value" of the state change g (weighted by the costate variable λ).
+    </div>
+    <div class="box thm"><div class="bl t">The Three Optimality Conditions (N = K = 1 case)</div>
+    Let u(t) be the optimal control. For all t:
+    <div class="math">(i)   u(t) = argmax_{u∈U} H(x(t), u, λ(t))          [Maximum Principle]
+
+(ii)  dx(t)/dt = ∂H/∂λ = g(x(t), u(t))              [State equation]
+
+(iii) dλ(t)/dt = −∂H/∂x = −∂/∂x[f(x,u) + λg(x,u)]  [Costate equation]</div>
+    Conditions (ii) and (iii) together are called the <strong>Hamiltonian system</strong>. Condition (i) is the <strong>maximum principle</strong>.
+    </div>
+    <div class="box int"><div class="bl i">Interpreting the Three Conditions</div>
+    <ul class="bl-list">
+      <li><strong>Maximum principle (i):</strong> At every instant t, choose the control u to maximize the Hamiltonian H — the immediate payoff plus the value of the state change.</li>
+      <li><strong>State equation (ii):</strong> The state x evolves according to the system dynamics g. This is the "feasibility" constraint in differential form.</li>
+      <li><strong>Costate equation (iii):</strong> λ(t) evolves to track how the future value of the problem changes with the state. It is the "marginal value of x" — the shadow price of the state variable.</li>
+    </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Constancy of the Hamiltonian</div>
+    <p>The maximum principle implies ∂H/∂u = 0 (when H is differentiable in u and the interior of U contains the optimal u(t)). Then, differentiating H along the optimal path:</p>
+    <div class="math">dH/dt = (∂H/∂x)(dx/dt) + (∂H/∂u)(du/dt) + (∂H/∂λ)(dλ/dt)
+       = (∂H/∂x)(∂H/∂λ) + 0 + (∂H/∂λ)(−∂H/∂x)
+       = 0</div>
+    <div class="box thm"><div class="bl t">Constancy of H Along Optimal Path</div>
+    H(x(t), u(t), λ(t)) = constant along the optimal trajectory, provided f and g do not depend directly on t. (If there is explicit time dependence, H is not necessarily constant.)
+    </div>
+    <div class="box int"><div class="bl i">Economic Meaning</div>
+    The constancy of H is the continuous-time analogue of the fact that the Lagrangian is constant at an optimum. In growth models, H = u(C) + λ[f(K)−C] constant means: the sum of current utility plus the value of investment is constant over time. This is a powerful constraint on optimal trajectories.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Example 12.1 — The Linear-Quadratic Problem</div>
+    <div class="box ex"><div class="bl e">Problem</div>
+    Bring a point from x(0)=x₀ to x(T)=0, minimizing ∫₀ᵀ [x²(t) + (dx/dt)²] dt. Here u(t) = dx/dt (velocity is the control), so g(x,u) = u and f(x,u) = −x² − u².
+    </div>
+    <div class="box thm"><div class="bl t">Solution via Euler's Equation</div>
+    Since u = dx/dt, the Hamiltonian condition gives λ = −∂f/∂u = 2u = 2dx/dt, and the costate equation gives dλ/dt = −∂f/∂x = 2x. Eliminating λ:
+    <div class="math">d²x/dt² = x(t)   for all t</div>
+    General solution: x(t) = aeᵗ + be⁻ᵗ for constants a, b. Using boundary conditions x(0)=x₀ and x(T)=0:
+    <div class="math">a = −x₀/(e²ᵀ−1)   and   b = e²ᵀx₀/(e²ᵀ−1)
+
+x(t) = −[x₀/(e²ᵀ−1)]eᵗ + [e²ᵀx₀/(e²ᵀ−1)]e⁻ᵗ</div>
+    </div>
+    <div class="box thm"><div class="bl t">Optimal Horizon T = ∞</div>
+    The value function V(T) = x₀²/(e²ᵀ−1) + x₀²/(1−e⁻²ᵀ) is decreasing in T. So the optimal choice is T = ∞, giving solution x(t) = x₀e⁻ᵗ (a=0, b=x₀). The state decays exponentially to zero.
+    </div>
+    <div class="box warn"><div class="bl w">Example with No Solution</div>
+    If there is no cost to changing x (no u² term): max ∫−x²(t)dt subject to x(0) given. The optimal thing is to reach 0 as fast as possible. But no matter how large |dx/dt|, you can always do better by going faster still. No finite-speed program is optimal → no solution exists (unless x(0)=0).
+    </div>
+  </div>
+  <div style="text-align:right;margin-top:8px;"><button class="btn" onclick="go(4)">Next: General Vector Case →</button></div>
+</div>
+
+<!-- ===== SECTION 4: VECTOR CASE ===== -->
+<div class="sec" id="s4">
+  <div class="card">
+    <div class="card-title">Section 4</div>
+    <h2>The General Vector Case: N State Variables, K Controls</h2>
+    <div class="box thm"><div class="bl t">The Hamiltonian System (General Case)</div>
+    Let x = (x₁,…,xₙ) ∈ ℝᴺ (state), u = (u₁,…,uₖ) ∈ U ⊆ ℝᴷ (control), λ = (λ₁,…,λₙ) ∈ ℝᴺ (costates). The Hamiltonian:
+    <div class="math">H(x, u, λ) = f(x, u) + Σₙ λₙ gₙ(x, u)</div>
+    Necessary conditions for optimality: ∃ piecewise differentiable λ₁(t),…,λₙ(t) (not all zero) such that for all t:
+    <div class="math">dxₙ(t)/dt = ∂H/∂λₙ = gₙ(x(t), u(t))         [state equation, n=1,…,N]
+
+dλₙ(t)/dt = −∂H/∂xₙ                          [costate equation, n=1,…,N]
+
+u(t) = argmax_{u∈U} H(x(t), u, λ(t))          [maximum principle]
+
+dH/dt = 0 along optimal path                   [constancy of H]</div>
+    </div>
+    <div class="box def"><div class="bl d">State and Costate Variables</div>
+    <ul class="bl-list">
+      <li><strong>State variables</strong> x₁(t),…,xₙ(t): describe the system. Initial and terminal conditions x(0)=x₀, x(T)=x₁ are given.</li>
+      <li><strong>Costate (dual/conjugate/auxiliary) variables</strong> λ₁(t),…,λₙ(t): the shadow prices of the state variables. They satisfy the costate ODE and need NOT be non-negative (unlike KT multipliers).</li>
+    </ul>
+    </div>
+    <div class="box rmk"><div class="bl r">Determining the Solution</div>
+    The Hamiltonian system is a system of 2N ODEs in (x₁,…,xₙ,λ₁,…,λₙ), requiring 2N initial conditions. These are provided by the N initial conditions x(0)=x₀ and N terminal conditions x(T)=x₁. Given (x(t),λ(t)), the optimal u(t) is determined by the maximum principle at each t.
+    </div>
+    <div class="box int"><div class="bl i">Euler's Equation as a Special Case</div>
+    When the control is the rate of change of the state (u = dx/dt, so g(x,u) = u), the maximum principle gives λ = −∂f/∂u and the costate equation gives dλ/dt = −∂f/∂x. Eliminating λ gives:
+    <div class="math">d/dt [∂f(x, dx/dt)/∂(dx/dt)] = ∂f(x, dx/dt)/∂x</div>
+    This is the classical <strong>Euler equation</strong> from the calculus of variations, now recovered as a special case of the maximum principle.
+    </div>
+  </div>
+  <div style="text-align:right;margin-top:8px;"><button class="btn" onclick="go(5)">Next: Value Function &amp; HJB →</button></div>
+</div>
+
+<!-- ===== SECTION 5: VALUE FUNCTION & HJB ===== -->
+<div class="sec" id="s5">
+  <div class="card">
+    <div class="card-title">Section 5</div>
+    <h2>The Value Function in Optimal Control and the Hamilton-Jacobi-Bellman Equation</h2>
+    <h3>The Value Function</h3>
+    <p>The value function at time 0 is V(x₀, 0) = max over admissible controls of ∫₀ᵀ f(x(t),u(t)) dt, starting at x(0)=x₀. More generally, the value function at time t is:</p>
+    <div class="math">V(x, t) = max ∫ₜᵀ f(x(s), u(s)) ds
+  s.t. dx(s)/ds = g(x(s),u(s)), x(t)=x, x(T)=x₁</div>
+    <div class="box thm"><div class="bl t">Costate Variable as Derivative of Value Function</div>
+    If V(x,t) is differentiable in x, then:
+    <div class="math">λ(t) = ∂V(x̄(t), t)/∂x</div>
+    The costate variable at time t is the marginal value of the state variable — exactly as the Lagrange multiplier is the shadow price of the constraint in static optimization.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">The Hamilton-Jacobi-Bellman (HJB) Equation</div>
+    <p>Using the fundamental theorem of calculus and the chain rule, Bewley derives:</p>
+    <div class="math">−f(x(t), u(t)) = dV(x(t),t)/dt = [∂V/∂x][dx/dt] + ∂V/∂t
+                               = λ(t)g(x(t),u(t)) + ∂V/∂t</div>
+    <p>Rearranging and using the maximum principle:</p>
+    <div class="box thm"><div class="bl t">Hamilton-Jacobi-Bellman Equation</div>
+    <div class="math">∂V(x(t), t)/∂t = − max_{u∈U} H(x(t), u, ∂V/∂x)
+                     = − max_{u∈U} [f(x(t), u) + (∂V/∂x) g(x(t), u)]</div>
+    This is a <strong>partial differential equation</strong> in V(x,t). It is the continuous-time analogue of the Bellman equation in discrete time. Solving it over the whole state space gives V, from which the optimal control policy can be recovered.
+    </div>
+    <div class="two-col">
+      <div class="compare-box">
+        <h4>Discrete-Time Bellman Equation</h4>
+        <p>V(x₀) = max_{x₁∈G(x₀)} [u(x₀,x₁) + βV(x₁)]</p>
+        <p>A functional equation: V(x) appears on both sides.</p>
+        <p>Solved by contraction mapping / value function iteration.</p>
+      </div>
+      <div class="compare-box">
+        <h4>Continuous-Time HJB Equation</h4>
+        <p>∂V/∂t = −max_{u∈U} [f(x,u) + (∂V/∂x)g(x,u)]</p>
+        <p>A partial differential equation in V(x,t).</p>
+        <p>Solved analytically in some cases; numerically in others.</p>
+      </div>
+    </div>
+    <div class="box int"><div class="bl i">The "Guess and Verify" Method</div>
+    For many economic models, one guesses a functional form for V(x,t) (e.g., V = A + B ln(K)) and verifies it satisfies the HJB. Substituting ∂V/∂x for λ(t) in the Hamiltonian system and finding constants A, B yields a complete solution. This is what Bewley does in the growth model example.
+    </div>
+  </div>
+  <div style="text-align:right;margin-top:8px;"><button class="btn" onclick="go(6)">Next: Growth Model Example →</button></div>
+</div>
+
+<!-- ===== SECTION 6: GROWTH MODEL ===== -->
+<div class="sec" id="s6">
+  <div class="card">
+    <div class="card-title">Section 6 — Appendix to Lecture 12</div>
+    <h2>Application: Optimal Economic Growth Model</h2>
+    <p>A single commodity used for either capital or consumption. Output = f(K(t)) (production function). Investment = dK/dt = f(K) − C (capital accumulation). Utility flow = u(C(t)).</p>
+    <div class="box def"><div class="bl d">The Optimal Growth Problem</div>
+    <div class="math">max_{C:[0,T]→[0,∞)} ∫₀ᵀ u(C(t)) dt
+
+subject to:
+  dK(t)/dt = f(K(t)) − C(t)   [capital accumulation]
+  K(0) = K₀ > 0               [initial capital]
+  K(T) ≥ K₁ > 0               [terminal capital constraint]</div>
+    State variable: K(t). Control variable: C(t) ≥ 0. Assumptions: u' > 0, u'' &lt; 0, f' > 0, f'' &lt; 0 (diminishing returns).
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Applying the Hamiltonian</div>
+    <div class="box thm"><div class="bl t">The Hamiltonian and Optimality Conditions</div>
+    <div class="math">H(K, C, λ) = u(C) + λ[f(K) − C]</div>
+    <p><strong>Hamiltonian system:</strong></p>
+    <div class="math">dK/dt = ∂H/∂λ = f(K(t)) − C(t)      [state equation = capital accumulation]
+
+dλ/dt = −∂H/∂K = −λ(t) · f'(K(t))  [costate equation]</div>
+    <p><strong>Maximum principle:</strong> C(t) maximizes H = u(C) + λ(t)[f(K)−C] over C ≥ 0. If C(t) > 0:</p>
+    <div class="math">∂H/∂C = 0   →   u'(C(t)) = λ(t)   [marginal utility = shadow price of capital]</div>
+    </div>
+    <div class="box int"><div class="bl i">Interpreting u'(C) = λ</div>
+    The costate variable λ(t) is the shadow price of capital — the marginal value of an additional unit of capital at time t. The condition u'(C) = λ says: at the optimum, the marginal utility of consumption equals the marginal value of investing (not consuming) that unit. This is the classic "equimarginal principle."
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">The Continuous-Time Euler Equation</div>
+    <p>From u'(C(t)) = λ(t) and the costate equation dλ/dt = −λ(t)f'(K(t)):</p>
+    <div class="math">d/dt [u'(C(t))] = −u'(C(t)) · f'(K(t))   [equation 12.5]</div>
+    <p>This is the continuous-time analogue of the discrete-time Euler equation from Lecture 10:</p>
+    <div class="math">u'(Cₜ) = β · u'(Cₜ₊₁) · F'(Kₜ)   [discrete]
+
+d/dt [u'(C(t))] = −u'(C(t)) · f'(K(t))  [continuous, with no discounting]</div>
+    <div class="box thm"><div class="bl t">Constancy of the Hamiltonian (Equation 12.6)</div>
+    H = u(C(t)) + λ(t)[f(K(t))−C(t)] = constant. Using λ=u'(C) and dK/dt=f(K)−C:
+    <div class="math">u(C(t)) + u'(C(t)) · dK(t)/dt = constant   (12.6)</div>
+    </div>
+    <div class="box thm"><div class="bl t">Key Properties of Optimal Paths</div>
+    If C(0) > 0 (so λ(0) > 0): since f' > 0, dλ/dt = −λf' &lt; 0, so λ is decreasing. Since λ = u'(C) and u'' &lt; 0, dC/dt = [u'']⁻¹ · dλ/dt > 0: <strong>consumption is always increasing</strong>. Also: when dK/dt=0, d²K/dt² &lt; 0 (capital is at a local maximum when stationary).
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Specific Functions: Quadratic Utility, Linear Production</div>
+    <p>Let u(C) = −(a/2)(C−C̄)² and f(K) = bK, where a, C̄, b > 0. Then:</p>
+    <div class="math">H(K, C, λ) = −(a/2)(C−C̄)² + λ(bK−C)</div>
+    <div class="box thm"><div class="bl t">Costate Evolution and Phase Space</div>
+    The costate equation: dλ/dt = −bλ(t), so λ(t) = λ(0)e⁻ᵇᵗ. The constancy of H, combined with u'(C)=a(C̄−C), gives: K̇² − b²(K−K̄)² = γ, where K̄ = C̄/b (bliss capital stock) and γ is a constant.
+    </div>
+    <p>This is an equation of conic sections in (K, K̇)-space (phase space):</p>
+    <ul class="bl-list">
+      <li><strong>γ = 0:</strong> Two straight lines through (K̄, 0): K̇ = ±b(K−K̄). Optimal paths lie on these lines.</li>
+      <li><strong>γ ≠ 0:</strong> Hyperbolas with asymptotes K̇ = ±b(K−K̄). Optimal paths lie on branches of these hyperbolas.</li>
+    </ul>
+    <div class="box int"><div class="bl i">The Turnpike Property</div>
+    As the time horizon T → ∞, the optimal path spends most of its time near K̄ (the bliss capital stock). The path enters from K₀, approaches K̄ closely, lingers there for most of the planning period, then exits toward K₁. This property — that optimal long-run paths concentrate near a "turnpike" — is a general feature of optimal growth models. The term "turnpike" refers to the resemblance of the (K,t)-graph to a highway map with entrance/exit ramps.
+    </div>
+    <p>From the phase diagram (K, K̇)-space (Figures 12.3–12.5 in the notes):</p>
+    <ul class="bl-list">
+      <li>Paths further from the K-axis (higher |K̇|) move faster, reaching K₁ sooner (smaller T).</li>
+      <li>The path labeled 1 in the notes reaches K₁ fastest; paths 2, 3, 4 take progressively longer by overshooting K̄.</li>
+      <li>Paths that overshoot spend a long time near K̄ (slow dynamics near the bliss point), spending a fraction → 1 of total time near K̄ as T → ∞.</li>
+    </ul>
+  </div>
+  <div style="text-align:right;margin-top:8px;"><button class="btn" onclick="go(7)">Next: Lecture 13 — HJB Derivation →</button></div>
+</div>
+
+<!-- ===== SECTION 7: LECTURE 13 ===== -->
+<div class="sec" id="s7">
+  <div class="card">
+    <div class="card-title">Lecture 13</div>
+    <h2>Optimal Control Theory II: Deriving the HJB from the Bellman Equation</h2>
+    <p>Bewley shows the connection between the Bellman equation (discrete time) and the HJB equation (continuous time) by deriving the latter from the former via a limiting argument.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Derivation of the HJB from the Bellman Equation</div>
+    <p>Let (x̄(t), ū(t)) be optimal. Think of dt as a small positive number. By the discrete Bellman equation and Taylor's theorem:</p>
+    <div class="math">V(x̄(t), t) = max_{u∈U} [f(x̄(t), u) dt + V(x̄(t+dt), t+dt)] + o(dt)</div>
+    <p>Expanding V(x̄(t+dt), t+dt) by Taylor:</p>
+    <div class="math">V(x̄(t+dt), t+dt) ≈ V(x̄(t), t) + (∂V/∂x)(dx̄/dt)dt + (∂V/∂t)dt
+                     = V(x̄(t),t) + (∂V/∂x)g(x̄,u)dt + (∂V/∂t)dt</div>
+    <p>Substituting and canceling V(x̄(t),t) from both sides:</p>
+    <div class="math">0 = (∂V/∂t)dt + max_{u∈U} [f(x̄(t),u) + (∂V/∂x)g(x̄(t),u)] dt + o(dt)</div>
+    <p>Dividing by dt and letting dt → 0:</p>
+    <div class="box thm"><div class="bl t">Hamilton-Jacobi-Bellman Equation (Equation 13.1)</div>
+    <div class="math">∂V(x(t), t)/∂t = − max_{u∈U} [f(x(t), u) + (∂V(x(t),t)/∂x) · g(x(t), u)]</div>
+    This PDE, combined with the terminal condition V(x,T) = 0 (or the appropriate boundary condition), fully characterizes the value function. <strong>Solving it is both necessary and sufficient for optimality</strong>, provided V is differentiable.
+    </div>
+    <div class="box thm"><div class="bl t">Verification: Maximum Principle from HJB</div>
+    Substituting λ(t) = ∂V/∂x into the HJB and using the maximum principle (ū(t) maximizes H), we recover:
+    <div class="math">∂V/∂t = −f(x(t), ū(t)) − λ(t)g(x(t), ū(t))</div>
+    This confirms that the maximum principle is consistent with the HJB — the HJB provides an alternative derivation of the maximum principle when V is differentiable.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Summary: The Complete System for Optimal Control</div>
+    <table class="gt">
+      <tr><th>Equation</th><th>Description</th><th>Analogy</th></tr>
+      <tr><td>H(x,u,λ) = f(x,u) + λᵀg(x,u)</td><td>Hamiltonian definition</td><td>Lagrangian L = f − λ·g</td></tr>
+      <tr><td>u(t) = argmax_u H(x(t),u,λ(t))</td><td>Maximum principle</td><td>FOC ∂L/∂u = 0</td></tr>
+      <tr><td>dx/dt = ∂H/∂λ = g(x,u)</td><td>State equation</td><td>Constraint g(x)=a</td></tr>
+      <tr><td>dλ/dt = −∂H/∂x</td><td>Costate equation</td><td>FOC ∂L/∂x = 0</td></tr>
+      <tr><td>dH/dt = 0</td><td>Constancy of H</td><td>Value function constant at optimum</td></tr>
+      <tr><td>λ(t) = ∂V/∂x</td><td>Costate = shadow price</td><td>λ = ∂V/∂a</td></tr>
+      <tr><td>∂V/∂t = −max_u H(x,u,∂V/∂x)</td><td>HJB equation</td><td>Bellman equation</td></tr>
+    </table>
+    <div class="box int"><div class="bl i">Why Optimal Control Appears in PhD Econ</div>
+    <ul class="bl-list">
+      <li><strong>Trade:</strong> Dynamic models of firm learning, technology adoption, and export entry use optimal control (x = knowledge stock, u = investment in R&D).</li>
+      <li><strong>Macro:</strong> Ramsey-Cass-Koopmans growth model is an optimal control problem. The costate λ = marginal utility of consumption.</li>
+      <li><strong>IO:</strong> Dynamic pricing, capacity investment, patent races.</li>
+      <li><strong>International Econ:</strong> Optimal tariff dynamics, debt accumulation, exchange rate paths.</li>
+    </ul>
+    </div>
+  </div>
+  <div style="text-align:right;margin-top:8px;"><button class="btn gold" onclick="go(8)">Take the Quiz! →</button></div>
+</div>
+
+<!-- ===== QUIZ ===== -->
+<div class="sec" id="s8">
+  <div class="card">
+    <div class="card-title">📝 Quiz — Lecture 12: Optimal Control Theory</div>
+    <div class="score" id="sc">Score: 0 / 0</div>
+    <div id="qc"></div>
+  </div>
+</div>
+
+</div><!-- end main -->
+
+<script>
+const secs=document.querySelectorAll('.sec');
+const navBtns=document.querySelectorAll('.sec-nav button');
+function go(i){secs.forEach((s,j)=>s.classList.toggle('active',j===i));navBtns.forEach((b,j)=>b.classList.toggle('active',j===i));window.scrollTo({top:0,behavior:'smooth'});if(i===8)initQ();}
+
+const QS=[
+  {q:"In Bewley's vehicle analogy, what do x(t), u(t), and f(x(t),u(t)) represent respectively?",
+   opts:[
+     "Time, position, and fuel rate",
+     "Position (state), throttle/direction (control), and fuel consumption rate (instantaneous payoff)",
+     "Velocity, acceleration, and distance",
+     "Capital, consumption, and utility"
+   ],
+   ans:1,
+   fb:"Correct! x(t) is the state (position), u(t) is the control (throttle and direction, chosen from U), and f(x(t),u(t)) is the instantaneous objective (fuel consumption rate). The state evolves via dx/dt = g(x,u), the 'equations of motion.'"},
+  {q:"The Hamiltonian H(x, u, λ) is defined as:",
+   opts:[
+     "H = f(x,u) − λg(x,u)",
+     "H = f(x,u) + λg(x,u)",
+     "H = λf(x,u) + g(x,u)",
+     "H = f(x,u) · λg(x,u)"
+   ],
+   ans:1,
+   fb:"Correct! H(x,u,λ) = f(x,u) + λg(x,u). The Hamiltonian is the instantaneous payoff f plus λ times the state change g. Here λ is the costate variable — the shadow price of the state. Compare with the Lagrangian L = f − λ(g−ā) in static constrained optimization."},
+  {q:"The Maximum Principle says:",
+   opts:[
+     "The costate variable λ(t) is maximized at each t",
+     "The control u(t) must maximize the Hamiltonian H(x(t), u, λ(t)) over u ∈ U at each t",
+     "The state x(t) is maximized subject to constraints",
+     "The Hamiltonian H must equal zero at the optimum"
+   ],
+   ans:1,
+   fb:"Correct! The Maximum Principle: u(t) = argmax_{u∈U} H(x(t), u, λ(t)) for all t. At each instant, the optimal control maximizes the Hamiltonian — the sum of current payoff and the value of the induced state change. This is the continuous-time analogue of the Kuhn-Tucker conditions."},
+  {q:"The costate (Hamiltonian) system consists of which two ODEs?",
+   opts:[
+     "dx/dt = ∂H/∂u and du/dt = −∂H/∂x",
+     "dx/dt = ∂H/∂λ (= g(x,u)) and dλ/dt = −∂H/∂x",
+     "dx/dt = H and dλ/dt = −H",
+     "dH/dt = 0 and dx/dt = u"
+   ],
+   ans:1,
+   fb:"Correct! The Hamiltonian system: dx/dt = ∂H/∂λ = g(x,u) (state equation) and dλ/dt = −∂H/∂x (costate equation). Together with the maximum principle, these 2N ODEs in (x,λ) govern the entire optimal trajectory."},
+  {q:"Bewley shows that H(x(t), u(t), λ(t)) is constant along the optimal path. This holds when:",
+   opts:[
+     "f and g do not depend directly on time t",
+     "f and g are linear functions",
+     "The control set U is a compact set",
+     "N = K = 1 (one state, one control)"
+   ],
+   ans:0,
+   fb:"Correct! H is constant along the optimal path provided f and g do not depend explicitly on t (autonomous system). The proof: dH/dt = (∂H/∂x)(dx/dt) + (∂H/∂u)(du/dt) + (∂H/∂λ)(dλ/dt) = (∂H/∂x)(∂H/∂λ) + 0 + (∂H/∂λ)(−∂H/∂x) = 0."},
+  {q:"In the optimal growth model (Appendix to Lecture 12), the condition u'(C(t)) = λ(t) means:",
+   opts:[
+     "Consumption is maximized at all times",
+     "The marginal utility of consumption equals the shadow price of capital (costate variable)",
+     "The production function is concave",
+     "Capital is at its steady state"
+   ],
+   ans:1,
+   fb:"Correct! u'(C(t)) = λ(t) comes from the maximum principle: C(t) maximizes H = u(C)+λ(t)[f(K)−C], so ∂H/∂C = u'(C) − λ = 0. This equimarginal principle says: at the optimum, the marginal utility of consuming = the shadow price of investing (not consuming). λ(t) is the marginal value of capital at time t."},
+  {q:"The 'turnpike property' of optimal growth models means:",
+   opts:[
+     "The optimal path is always a straight line in state space",
+     "As T→∞, the optimal path spends nearly all its time near the stationary ('bliss') capital level K̄",
+     "Capital always grows monotonically to infinity",
+     "The optimal policy is constant savings rate regardless of T"
+   ],
+   ans:1,
+   fb:"Correct! Turnpike property: as the horizon T→∞, the optimal path approaches the bliss capital K̄ quickly, stays near it for proportion →1 of the total time, and only departs near the end to reach K₁. The name comes from the resemblance to a highway map: enter the 'turnpike' (K̄), travel along it, then exit toward the destination."},
+  {q:"The Hamilton-Jacobi-Bellman (HJB) equation is:",
+   opts:[
+     "∂V/∂t = −max_{u∈U} [f(x,u) + (∂V/∂x)g(x,u)]",
+     "∂V/∂x = −max_{u∈U} [f(x,u) + (∂V/∂t)g(x,u)]",
+     "V(x,t) = max_{u∈U} [f(x,u)dt + V(x,t)]",
+     "dV/dt = f(x,u) + λg(x,u)"
+   ],
+   ans:0,
+   fb:"Correct! The HJB equation: ∂V(x,t)/∂t = −max_{u∈U} [f(x,u) + (∂V/∂x)g(x,u)]. It is the continuous-time PDE analogue of the Bellman equation. When V is differentiable, the HJB is both necessary and sufficient for optimality. The costate variable λ(t) = ∂V(x(t),t)/∂x."},
+  {q:"In Example 12.1 (minimize ∫[x²+(dx/dt)²]dt), applying Euler's equation gives:",
+   opts:[
+     "dx/dt = 0 for all t",
+     "d²x/dt² = x(t), with general solution x(t) = aeᵗ + be⁻ᵗ",
+     "x(t) = x₀e⁻ᵗ for all T",
+     "The optimal control is u(t) = constant"
+   ],
+   ans:1,
+   fb:"Correct! With f(x,u) = −x²−u² and u=dx/dt, Euler's equation gives d/dt[∂f/∂(dx/dt)] = ∂f/∂x, i.e., d/dt[−2dx/dt] = −2x, so d²x/dt² = x. General solution: x(t)=aeᵗ+be⁻ᵗ. Boundary conditions x(0)=x₀ and x(T)=0 determine a and b. As T→∞, a→0 and b→x₀, giving x(t)=x₀e⁻ᵗ."},
+  {q:"How does Bewley derive the HJB equation in Lecture 13?",
+   opts:[
+     "By directly differentiating the Lagrangian",
+     "By applying the discrete Bellman equation with a small time step dt, expanding by Taylor's theorem, and taking dt→0",
+     "By solving the Hamiltonian system explicitly",
+     "By applying the inverse function theorem to the state equation"
+   ],
+   ans:1,
+   fb:"Correct! Bewley's derivation: write V(x̄(t),t) = max_u [f(x̄,u)dt + V(x̄(t+dt),t+dt)] + o(dt). Expand V(x̄(t+dt),t+dt) by Taylor. Cancel V(x̄(t),t). Divide by dt. Take dt→0. The result is the HJB: ∂V/∂t = −max_u [f(x,u) + (∂V/∂x)g(x,u)]. This shows the HJB is exactly the continuous-time limit of the Bellman equation."}
+];
+
+let answered=[],score=0,init=false;
+function initQ(){if(init)return;init=true;answered=new Array(QS.length).fill(false);score=0;renderQ(0);}
+function renderQ(i){
+  if(i>=QS.length){
+    document.getElementById('qc').innerHTML=`<div class="box thm" style="text-align:center;padding:28px;"><div class="bl t">🎉 Quiz Complete!</div><p style="font-size:20px;margin:14px 0;"><strong>Score: ${score}/${QS.length}</strong></p><p>${score===QS.length?"Perfect score! You've mastered Optimal Control Theory! 🏆":score>=7?"Strong work — ready for Yale PhD econ!":"Review the sections above and try again."}</p><button class="btn" style="margin-top:16px;" onclick="resetQ()">Try Again</button><button class="btn" style="margin-top:16px;margin-left:10px;" onclick="go(0)">Review Lecture</button></div>`;
+    return;
+  }
+  const q=QS[i];
+  document.getElementById('qc').innerHTML=`<div style="margin-bottom:10px;color:var(--muted);font-size:13px;font-family:Arial;">Question ${i+1} of ${QS.length}</div><div class="quiz-q">${q.q}</div><div class="quiz-opts">${q.opts.map((o,j)=>`<button class="qopt" id="o${i}${j}" onclick="ansQ(${i},${j})">${o}</button>`).join('')}</div><div class="qfb" id="fb${i}"></div><div class="qnxt" id="nx${i}"><button class="btn" onclick="renderQ(${i+1})">${i===QS.length-1?'See Results →':'Next Question →'}</button></div>`;
+}
+function ansQ(i,chosen){
+  if(answered[i])return;answered[i]=true;
+  const q=QS[i];const ok=chosen===q.ans;if(ok)score++;
+  document.getElementById('sc').textContent=`Score: ${score}/${answered.filter(Boolean).length}`;
+  for(let j=0;j<q.opts.length;j++){const b=document.getElementById(`o${i}${j}`);if(j===q.ans)b.classList.add('ok');else if(j===chosen&&!ok)b.classList.add('no');b.disabled=true;}
+  const fb=document.getElementById(`fb${i}`);fb.className=`qfb show ${ok?'ok':'no'}`;fb.innerHTML=`<strong>${ok?'✓ Correct!':'✗ Not quite.'}</strong> ${q.fb}`;
+  document.getElementById(`nx${i}`).classList.add('show');
+}
+function resetQ(){init=false;document.getElementById('sc').textContent='Score: 0 / 0';initQ();}
+</script>
+</body>
+</html>

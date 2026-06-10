@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bewley Math Camp — Lectures 2–6</title>
+<style>
+:root {
+  --navy:#0f1f3d; --blue:#1a3a6b; --accent:#2e7de0; --gold:#e8a020;
+  --light-gold:#fef3dc; --green:#1a7a4a; --light-green:#d4f0e0;
+  --red:#c0392b; --light-red:#fce8e6; --purple:#6d28d9; --light-purple:#ede9fe;
+  --bg:#f4f6fa; --card:#fff; --text:#1a1a2e; --muted:#5a6680;
+  --border:#dde2ef; --code-bg:#eef2fb;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Georgia,serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:16px;}
+.header{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;padding:28px 40px 20px;border-bottom:4px solid var(--gold);}
+.header-badge{font-family:Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+.header h1{font-size:26px;font-weight:normal;margin-bottom:4px;}
+.header .subtitle{font-size:14px;opacity:.75;font-style:italic;}
+.lec-nav{background:var(--card);border-bottom:2px solid var(--border);padding:0 24px;display:flex;gap:2px;overflow-x:auto;flex-wrap:wrap;}
+.lec-nav button{padding:12px 14px;border:none;background:none;font-size:13px;font-family:Arial,sans-serif;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .2s;}
+.lec-nav button:hover{color:var(--accent);}
+.lec-nav button.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:bold;}
+.main{max-width:920px;margin:0 auto;padding:28px 20px 60px;}
+.lec{display:none;}.lec.active{display:block;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:26px 30px;margin-bottom:22px;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.card-title{font-size:12px;font-family:Arial,sans-serif;font-weight:bold;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+h2{font-size:20px;color:var(--navy);margin-bottom:10px;font-weight:normal;}
+h3{font-size:17px;color:var(--blue);margin:16px 0 8px;}
+p{margin-bottom:11px;}
+.box{border-radius:8px;padding:15px 18px;margin:14px 0;font-size:15px;}
+.box.def{background:#e8f0fe;border-left:4px solid var(--accent);}
+.box.thm{background:var(--light-gold);border-left:4px solid var(--gold);}
+.box.ex{background:var(--light-green);border-left:4px solid var(--green);}
+.box.warn{background:var(--light-red);border-left:4px solid var(--red);}
+.box.int{background:var(--light-purple);border-left:4px solid var(--purple);}
+.box.rmk{background:#f0f4ff;border-left:4px solid #93c5fd;}
+.bl{font-family:Arial,sans-serif;font-size:11px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;}
+.bl.d{color:var(--accent);}.bl.t{color:#a06010;}.bl.e{color:var(--green);}.bl.w{color:var(--red);}.bl.i{color:var(--purple);}.bl.r{color:#3b82f6;}
+.math{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:14px 18px;margin:12px 0;font-family:'Courier New',monospace;font-size:14px;overflow-x:auto;line-height:1.9;}
+.steps{margin:12px 0;}
+.step{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sn{min-width:30px;height:30px;background:var(--accent);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;flex-shrink:0;margin-top:2px;}
+.sb{flex:1;}
+table.gt{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px;}
+table.gt th{background:var(--navy);color:#fff;padding:9px 12px;text-align:left;font-weight:normal;font-family:Arial,sans-serif;font-size:13px;}
+table.gt td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+table.gt tr:nth-child(even) td{background:var(--bg);}
+.diagram{text-align:center;margin:16px 0;overflow-x:auto;}
+.quiz-q{font-size:16px;margin-bottom:14px;color:var(--navy);}
+.quiz-opts{display:grid;gap:9px;}
+.qopt{background:var(--bg);border:2px solid var(--border);border-radius:8px;padding:11px 16px;cursor:pointer;font-size:15px;transition:all .2s;font-family:Georgia,serif;text-align:left;}
+.qopt:hover{border-color:var(--accent);background:#e8f0fe;}
+.qopt.ok{border-color:var(--green);background:var(--light-green);}
+.qopt.no{border-color:var(--red);background:var(--light-red);}
+.qfb{margin-top:12px;padding:12px;border-radius:8px;display:none;font-size:14px;}
+.qfb.show{display:block;}
+.qfb.ok{background:var(--light-green);color:#0d5c34;border-left:4px solid var(--green);}
+.qfb.no{background:var(--light-red);color:#8b1a12;border-left:4px solid var(--red);}
+.qnxt{margin-top:12px;display:none;}
+.qnxt.show{display:block;}
+.btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:14px;font-family:Arial,sans-serif;cursor:pointer;transition:background .2s;}
+.btn:hover{background:var(--navy);}
+.btn.sec{background:var(--card);color:var(--accent);border:2px solid var(--accent);}
+.btn.sec:hover{background:#e8f0fe;}
+.btn.gold{background:var(--gold);color:var(--navy);}
+.score{font-family:Arial,sans-serif;font-size:14px;color:var(--muted);text-align:right;margin-bottom:8px;}
+.roadmap{display:flex;gap:0;margin:16px 0;overflow-x:auto;}
+.ri{flex:1;min-width:110px;text-align:center;position:relative;}
+.ri:not(:last-child)::after{content:'→';position:absolute;right:-8px;top:12px;color:var(--muted);font-size:16px;}
+.rb{background:var(--code-bg);border:2px solid var(--border);border-radius:8px;padding:9px 7px;font-size:12px;font-family:Arial,sans-serif;line-height:1.4;}
+.rb.cur{background:#e8f0fe;border-color:var(--accent);font-weight:bold;}
+ul.bl-list{margin:8px 0 8px 22px;line-height:2.1;}
+ul.bl-list li{margin-bottom:2px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-badge">Yale Econ Math Camp · Bewley Notes 2020</div>
+  <h1>Lectures 2–6: Linear Algebra II–III, Real Analysis I–II, Multivariable Calculus</h1>
+  <div class="subtitle">All content directly from Truman Bewley's notes</div>
+</div>
+
+<div class="lec-nav">
+  <button class="active" onclick="go(0)">📖 Lec 2: Linear Algebra II</button>
+  <button onclick="go(1)">📖 Lec 3: Linear Algebra III</button>
+  <button onclick="go(2)">📖 Lec 4: Real Analysis I</button>
+  <button onclick="go(3)">📖 Lec 5: Real Analysis II</button>
+  <button onclick="go(4)">📖 Lec 6: Multivariable Calculus</button>
+  <button onclick="go(5)">✅ Quiz</button>
+</div>
+
+<div class="main">
+
+<!-- ===== LECTURE 2 ===== -->
+<div class="lec active" id="l0">
+  <div class="card">
+    <div class="card-title">Lecture 2</div>
+    <h2>Linear Algebra II: Linear Transformations, Inverses, Kernel, Range</h2>
+    <div class="roadmap">
+      <div class="ri"><div class="rb cur">Linear<br>Transf.</div></div>
+      <div class="ri"><div class="rb">Matrix<br>Repr.</div></div>
+      <div class="ri"><div class="rb">Invertible<br>Matrices</div></div>
+      <div class="ri"><div class="rb">Kernel &amp;<br>Range</div></div>
+      <div class="ri"><div class="rb">Rank-<br>Nullity</div></div>
+      <div class="ri"><div class="rb">Inner<br>Product</div></div>
+      <div class="ri"><div class="rb">Gram-<br>Schmidt</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 1 — Functions and Linear Transformations</div>
+    <div class="box def"><div class="bl d">Definition: Function</div>
+    If A and B are non-empty sets, a <strong>function</strong> f from A to B assigns a single point f(a) in B to every point a in A. Written f : A → B. The set A is the <strong>domain</strong>, B is the <strong>codomain</strong>. A function is also called a <strong>mapping</strong>.
+    </div>
+    <div class="box def"><div class="bl d">Definition: Linear Transformation</div>
+    If V and W are vector spaces, T : V → W is <strong>linear</strong> (a linear transformation) if:
+    <div class="math">T(av₁ + bv₂) = aT(v₁) + bT(v₂)</div>
+    for all numbers a and b and all vectors v₁, v₂ in V.
+    </div>
+    <div class="box ex"><div class="bl e">Example</div>
+    Let T : ℝᴺ → ℝᴹ be defined by T(x) = Ax, where A is an M×N matrix. Then:
+    <div class="math">T(ax + by) = A(ax + by) = aAx + bAy = aT(x) + bT(y)</div>
+    So T is linear. Every matrix defines a linear transformation this way.
+    </div>
+    <div class="box rmk"><div class="bl r">Remark</div>
+    If V is finite dimensional and W is a vector space, to define a linear transformation T : V → W it suffices to define T(vₙ) for each basis vector vₙ of V. If v = Σcₙvₙ, then T(v) = Σcₙ T(vₙ). A linear transformation is completely determined by what it does to a basis.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 2 — Matrix Representation of a Linear Transformation</div>
+    <p>Let T : V → W be linear. Let v₁,…,vₙ be a basis for V and w₁,…,wₘ be a basis for W. Since T(vₙ) ∈ W, we can write:</p>
+    <div class="math">T(vₙ) = a₁ₙw₁ + a₂ₙw₂ + ⋯ + aₘₙwₘ</div>
+    <p>This defines the M×N matrix A = (aₘₙ). By linearity, for any v = Σxₙvₙ:</p>
+    <div class="math">T(v) = Σyₘwₘ   where   y = Ax</div>
+    <p>So A represents T: given bases, every linear transformation corresponds to a unique matrix and vice versa.</p>
+    <div class="box thm"><div class="bl t">Matrix Multiplication as Composition</div>
+    If T : V → W has matrix A (M×N) and S : W → Q has matrix B (J×M), then the composition S ∘ T : V → Q has matrix <strong>C = BA</strong> (J×N), where cⱼₙ = Σₘ bⱼₘaₘₙ.
+    </div>
+    <div class="box def"><div class="bl d">Definition: Matrix Product</div>
+    If A is M×N and B is J×M, the product C = BA is the J×N matrix with (j,n)ᵗʰ entry <strong>cⱼₙ = Σₘ bⱼₘ aₘₙ</strong>.
+    </div>
+    <div class="box ex"><div class="bl e">Example</div>
+    <div class="math">[1 1 0] × [2  3  −2]   =  [2  3  −1]
+[0 1 0]   [0  0   1]      [0  0   1]
+            [1  0   0]</div>
+    </div>
+    <div class="box rmk"><div class="bl r">Key Remarks on Matrix Multiplication</div>
+    <ul class="bl-list">
+      <li>Matrix multiplication is <strong>associative</strong>: (CB)A = C(BA).</li>
+      <li>If A is N×N and I is the N×N identity matrix: IA = A = AI.</li>
+      <li>The identity matrix I represents the identity function idᵥ(v) = v.</li>
+    </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 3 — Invertible Matrices and Linear Transformations</div>
+    <div class="box def"><div class="bl d">Definition: Invertible Matrix</div>
+    An N×N matrix A is <strong>invertible</strong> if there is an N×N matrix A⁻¹ such that A⁻¹A = AA⁻¹ = I.
+    </div>
+    <div class="box thm"><div class="bl t">Lemma 2.1</div>
+    If A and B are invertible N×N matrices, then AB is invertible and (AB)⁻¹ = B⁻¹A⁻¹.
+    <div class="math">Proof: (B⁻¹A⁻¹)(AB) = B⁻¹(A⁻¹A)B = B⁻¹B = I ✓
+       (AB)(B⁻¹A⁻¹) = A(BB⁻¹)A⁻¹ = AA⁻¹ = I ✓</div>
+    </div>
+    <div class="box def"><div class="bl d">Definitions: Onto and One-to-One</div>
+    <p>A function f : V → W is <strong>onto</strong> (surjective) if for every w ∈ W, ∃v ∈ V such that f(v) = w.</p>
+    <p>A function f : V → W is <strong>one-to-one</strong> (injective) if v ≠ v' implies f(v) ≠ f(v').</p>
+    <p>f is <strong>invertible</strong> if and only if it is both one-to-one and onto.</p>
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 2.2</div>
+    If T : V → W is an invertible linear transformation, then T⁻¹ is also linear.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 2.6 — The Invertibility Criterion</div>
+    For an N×N matrix A, the following are equivalent:
+    <ol style="margin:8px 0 0 20px;line-height:2.2;">
+      <li>A is invertible</li>
+      <li>∃ N×N matrix B such that BA = I</li>
+      <li>The system Ax = 0 has no non-zero solution</li>
+    </ol>
+    <em>Proof sketch:</em> (3)→(1) uses the fact that elementary row operations correspond to left multiplication by invertible matrices P, so I = P₁P₂⋯Pᵩ A, giving A⁻¹ = P.
+    </div>
+    <div class="box int"><div class="bl i">Economic Interpretation</div>
+    A square system of equations (equal numbers of equations and unknowns) has a unique solution for every right-hand side if and only if the coefficient matrix is invertible. In general equilibrium: N markets with N prices have a unique equilibrium if the excess demand Jacobian is invertible.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 4 — Range, Kernel, Rank, Nullity</div>
+    <div class="box def"><div class="bl d">Definitions: Range and Kernel</div>
+    <p>If f : A → B is a function, the <strong>image (range)</strong> of f is {f(x) | x ∈ A}.</p>
+    <p>If T : V → W is a linear transformation, the <strong>null space (kernel)</strong> of T is {v ∈ V | T(v) = 0}.</p>
+    <p>The <strong>rank</strong> of T = dim(range of T). The <strong>nullity</strong> of T = dim(kernel of T).</p>
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 2.8</div>
+    If T : V → W is linear, the <strong>range of T is a subspace of W</strong> and the <strong>kernel of T is a subspace of V</strong>.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 2.9 — Rank-Nullity Theorem</div>
+    <div class="math">rank T + nullity T = dim V</div>
+    <em>Proof:</em> Let K = nullity T with basis v₁,…,vₖ. Extend to a basis v₁,…,vₖ,vₖ₊₁,…,vₙ for V. Show T(vₖ₊₁),…,T(vₙ) is a basis for the range of T, so rank T = N − K.
+    </div>
+    <div class="box int"><div class="bl i">Visual Intuition</div>
+    The kernel is the "directions that collapse to zero." The range is "what T can reach." Together they account for all of dim V. If T collapses K dimensions (nullity = K), the image only spans N−K dimensions (rank = N−K).
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 2.10</div>
+    With T : V → W represented by matrix A (M×N with respect to bases): rank T = column rank of A, and nullity T = N − column rank of A = N − row rank of A.
+    </div>
+    <p>The preimage of any w in the range: T⁻¹(w) = v + T⁻¹(0), where v is any solution to T(v) = w. The solution set is a "coset" — the particular solution plus the entire null space.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 5 — Singular/Non-Singular; Change of Basis</div>
+    <div class="box def"><div class="bl d">Definition: Singular and Non-Singular</div>
+    T : V → W is <strong>non-singular</strong> if its kernel = {0}. T is <strong>singular</strong> if T(v) = 0 for some v ≠ 0.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 2.12 — Five Equivalent Conditions (dim V = dim W)</div>
+    When dim V = dim W = N, all of the following are equivalent:
+    <ol style="margin:8px 0 0 20px;line-height:2.2;">
+      <li>(a) T is invertible</li>
+      <li>(b) T is non-singular (kernel = {0})</li>
+      <li>(c) T is onto (range = W)</li>
+      <li>(d) For any basis v₁,…,vₙ of V, T(v₁),…,T(vₙ) is a basis for W</li>
+      <li>(e) ∃ a basis v₁,…,vₙ of V such that T(v₁),…,T(vₙ) is a basis for W</li>
+    </ol>
+    </div>
+    <h3>Change of Basis</h3>
+    <p>If w₁,…,wₙ and v₁,…,vₙ are two bases for V, with wₘ = Σ aₙₘ vₙ, and if v = Σ bₙvₙ = Σ cₘwₘ, then:</p>
+    <div class="math">Ac = b   →   c = A⁻¹b         (equation 2.1)</div>
+    <p>When changing the matrix representation of T : V → V from basis v to basis w (with wₘ = Σ aₙₘvₙ, so A = change-of-basis matrix):</p>
+    <div class="math">C = A⁻¹BA         (equation 2.3)</div>
+    <p>This is a <em>similarity transformation</em>. C and B represent the same transformation T but in different bases.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 6 — Transpose, Inner Product, Orthogonality</div>
+    <div class="box def"><div class="bl d">Definition: Transpose</div>
+    If A is M×N, the <strong>transpose</strong> A<sup>T</sup> is the N×M matrix with (n,m)ᵗʰ entry = (m,n)ᵗʰ entry of A. Key properties: (AB)ᵀ = BᵀAᵀ; (aA+bB)ᵀ = aAᵀ+bBᵀ; (Aᵀ)ᵀ = A.
+    </div>
+    <div class="box def"><div class="bl d">Definition: Inner Product (Dot Product)</div>
+    The <strong>standard inner product</strong> on ℝᴺ: x · y = Σₙ xₙyₙ. The <strong>norm</strong>: ‖x‖ = √(x·x) = √(x₁² + ⋯ + xₙ²).
+    </div>
+    <div class="box rmk"><div class="bl r">Key Properties of Inner Product</div>
+    <ul class="bl-list">
+      <li>x · y = y · x; and x · (ay + bz) = ax·y + bx·z</li>
+      <li>If θ is the angle between non-zero x and y: cos θ = (x·y)/(‖x‖‖y‖)</li>
+      <li><strong>Cauchy-Schwarz:</strong> |x·y| ≤ ‖x‖‖y‖</li>
+      <li>x ⊥ y (perpendicular) iff x·y = 0</li>
+      <li>x·x ≥ 0 and x·x = 0 iff x = 0</li>
+      <li>x·y = xᵀy (treating x as N×1 matrix)</li>
+    </ul>
+    </div>
+    <div class="box def"><div class="bl d">Orthonormal Basis</div>
+    Vectors v₁,…,vₘ are <strong>orthogonal</strong> if vₙ·vₘ = 0 for n ≠ m. An <strong>orthonormal basis</strong> also requires vₘ·vₘ = 1 for all m (each vector has length 1).
+    </div>
+    <div class="box thm"><div class="bl t">Lemma 2.14 — Coordinates in Orthonormal Basis</div>
+    If v₁,…,vₘ is an orthonormal basis for V, then for any v ∈ V:
+    <div class="math">v = Σₘ (v · vₘ) vₘ</div>
+    The coordinate of v along vₘ is simply the dot product v·vₘ. This simplifies computation enormously.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 2.15 + Gram-Schmidt Process</div>
+    Every non-zero subspace V of ℝᴺ has an orthonormal basis. Construction (Gram-Schmidt):
+    <div class="steps">
+      <div class="step"><div class="sn">1</div><div class="sb">Start with v₁ = y₁/‖y₁‖</div></div>
+      <div class="step"><div class="sn">2</div><div class="sb">At step k+1: let wₖ₊₁ = yₖ₊₁ − (yₖ₊₁·v₁)v₁ − ⋯ − (yₖ₊₁·vₖ)vₖ. Then vₖ₊₁ = wₖ₊₁/‖wₖ₊₁‖</div></div>
+      <div class="step"><div class="sn">3</div><div class="sb">Each vₖ₊₁ is perpendicular to all previous vₘ (you subtract the projections onto them)</div></div>
+    </div>
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 2.16 — Orthogonal Complement</div>
+    If W is a subspace of V ⊆ ℝᴺ, then dim W + dim W⊥ = dim V. The orthogonal complement W⊥ = {y ∈ V | y·x = 0 for all x ∈ W}.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 2.17 — Orthogonal Projection</div>
+    There is a unique orthogonal projection π : V → W. Using an orthonormal basis v₁,…,vₖ for W:
+    <div class="math">π(v) = Σₖ (v · vₘ) vₘ</div>
+    The residual v − π(v) lies in W⊥.
+    </div>
+    <div class="box def"><div class="bl d">Definition: Orthogonal Matrix</div>
+    An N×N matrix A is <strong>orthogonal</strong> if AᵀA = I, equivalently A⁻¹ = Aᵀ. Its columns (and rows) form an orthonormal basis of ℝᴺ. An orthogonal change of basis preserves inner products: (Aᵀx)·(Aᵀy) = x·y.
+    </div>
+  </div>
+  <div style="text-align:right;margin-top:8px;"><button class="btn" onclick="go(1)">Next: Lecture 3 →</button></div>
+</div>
+
+<!-- ===== LECTURE 3 ===== -->
+<div class="lec" id="l1">
+  <div class="card">
+    <div class="card-title">Lecture 3</div>
+    <h2>Linear Algebra III: Determinants, Complex Numbers, Characteristic Values, Bilinear Forms</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 1 — Determinants: Geometric Motivation</div>
+    <p>The determinant of a 2×2 matrix A with rows v₁ = (a₁₁,a₁₂) and v₂ = (a₂₁,a₂₂) arises from the <em>signed area</em> of the parallelogram they generate.</p>
+    <p>Area = ‖v₁‖‖v₂‖ sin θ, where θ is the angle from v₁ to v₂ (can be negative). Using bilinearity and the alternating property, this signed area equals:</p>
+    <div class="math">f(v₁, v₂) = a₁₁a₂₂ − a₂₁a₁₂ = det(A)</div>
+    <div class="box int"><div class="bl i">Geometric Meaning</div>
+    <ul class="bl-list">
+      <li>det(A) > 0 if you go counterclockwise from row 1 to row 2 (smallest angle)</li>
+      <li>det(A) &lt; 0 if clockwise</li>
+      <li>det(A) = 0 iff the rows are dependent (lie on same line → parallelogram has zero area)</li>
+      <li>In N dimensions, |det(A)| = volume of the N-dimensional parallelepiped formed by the rows</li>
+    </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 2 — Formal Definition of the Determinant</div>
+    <div class="box def"><div class="bl d">Definition: Multilinear Form</div>
+    A <strong>multilinear form</strong> on V is a function f : Vᴷ → ℝ that is linear in each argument separately when the others are fixed.
+    </div>
+    <div class="box def"><div class="bl d">Definition: Alternating</div>
+    A multilinear form f is <strong>alternating</strong> if interchanging any two arguments changes its sign: f(…,vₖ,…,vₙ,…) = −f(…,vₙ,…,vₖ,…). Consequence: f(…,v,…,v,…) = 0.
+    </div>
+    <div class="box def"><div class="bl d">Definition: Permutation and Sign</div>
+    A <strong>permutation</strong> of {1,…,N} is a bijection from {1,…,N} to itself. Every permutation can be written as a sequence of pairwise interchanges. The number of interchanges is always odd or always even. The <strong>sign</strong> of σ: sgn(σ) = +1 if even, −1 if odd.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 3.2 — Definition of Determinant</div>
+    If f : (ℝᴺ)ᴺ → ℝ is an alternating multilinear form, then f(A) = (det A) f(I), where:
+    <div class="math">det A = Σ (sgn σ) a₁,σ(1) a₂,σ(2) ⋯ aₙ,σ(N)</div>
+    (sum over all permutations σ of {1,…,N}). The determinant is the unique alternating multilinear form on (ℝᴺ)ᴺ assigning 1 to the identity matrix I.
+    </div>
+    <div class="box ex"><div class="bl e">Verbal Description</div>
+    To compute det(A): pick one entry from each row, always from a different column. Multiply those N entries. The column choices define a permutation σ — multiply by sgn(σ). Sum over all N! such choices.
+    </div>
+    <div class="box thm"><div class="bl t">Proposition 3.3 — Effect of Row Operations on det</div>
+    <ol style="margin:8px 0 0 20px;line-height:2.2;">
+      <li>Multiplying one row by c: det(B) = c · det(A)</li>
+      <li>Adding a multiple of one row to another: det(B) = det(A)</li>
+      <li>Interchanging two rows: det(B) = −det(A)</li>
+      <li>Two equal rows: det(A) = 0</li>
+    </ol>
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 3.4 — Multiplicativity</div>
+    For N×N matrices A and B: <strong>det(AB) = det(A) · det(B)</strong>
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 3.6 — Transpose</div>
+    det(Aᵀ) = det(A). So the determinant is equally an alternating multilinear function of the rows or of the columns.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 3 — Cofactors and the Inverse Formula</div>
+    <div class="box def"><div class="bl d">Definitions: Cofactor and Adjoint</div>
+    <p>Let A(m|n) be the (N−1)×(N−1) matrix obtained by deleting row m and column n of A.</p>
+    <p>The <strong>(m,n)ᵗʰ cofactor</strong>: Cₘₙ = (−1)ᵐ⁺ⁿ det(A(m|n))</p>
+    <p>The <strong>adjoint</strong> adj(A): (adj A)ₘₙ = Cₙₘ (transpose of the cofactor matrix).</p>
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 3.7 — Cofactor Expansion</div>
+    <div class="math">det(A) = Σₘ aₘₙ Cₘₙ = Σₘ aₙₘ Cₙₘ   (expansion along column n or row n)</div>
+    For a 3×3 matrix, expanding along column 1:
+    <div class="math">det(A) = a₁₁det(A₂₂ A₂₃; A₃₂ A₃₃) − a₂₁det(A₁₂ A₁₃; A₃₂ A₃₃) + a₃₁det(A₁₂ A₁₃; A₂₂ A₂₃)</div>
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 3.9 — Inverse via Adjoint</div>
+    An N×N matrix A is invertible iff det(A) ≠ 0. In this case:
+    <div class="math">A⁻¹ = (1/det A) · adj(A)</div>
+    This gives an explicit formula for the inverse using cofactors.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 4 — Complex Numbers</div>
+    <p>Introduced to solve all polynomial equations. The number i = √(−1) is "imaginary." A <strong>complex number</strong>: z = a + bi, where a,b ∈ ℝ.</p>
+    <div class="box def"><div class="bl d">Arithmetic of Complex Numbers</div>
+    <div class="math">(a+bi)+(c+di) = (a+c) + (b+d)i
+(a+bi)−(c+di) = (a−c) + (b−d)i
+(a+bi)(c+di) = (ac−bd) + (ad+bc)i
+(a+bi)/(c+di): solve a+bi=(c+di)(x+yi) → x=(ac+bd)/(c²+d²), y=(bc−ad)/(c²+d²)</div>
+    </div>
+    <p>The <strong>fundamental theorem of algebra</strong>: every polynomial p(x) = aₙxᴺ + ⋯ + a₀ (aₙ ≠ 0) has exactly N complex roots b₁,…,bₙ, and p(x) = aₙ(x−b₁)⋯(x−bₙ).</p>
+    <div class="box def"><div class="bl d">Absolute Value of a Complex Number</div>
+    If λ = a + bi: |λ| = √(a² + b²).
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 5 — Characteristic Values (Eigenvalues) and Vectors</div>
+    <div class="box def"><div class="bl d">Definition: Characteristic Value and Vector</div>
+    If A is N×N, a complex number λ is a <strong>characteristic value (eigenvalue)</strong> of A if A − λI is singular. A non-zero vector x is a <strong>characteristic vector (eigenvector)</strong> if (A − λI)x = 0.
+    </div>
+    <p>λ is a characteristic value iff det(A − λI) = 0. The polynomial p(x) = det(xI − A) is the <strong>characteristic polynomial</strong> of A (degree N). Its roots are the N characteristic values (counting multiplicity).</p>
+    <div class="box ex"><div class="bl e">Example</div>
+    For A = [[a, b], [−b, a]] (b ≠ 0):
+    <div class="math">p(x) = det(xI−A) = (x−a)² + b²   →   x = a ± bi</div>
+    So the characteristic values are a+bi and a−bi (complex!). Eigenvectors: t(−i,1) and t(i,1).
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 3.12</div>
+    det(A) = λ₁λ₂⋯λₙ (product of all characteristic values).
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 3.13</div>
+    If all characteristic values satisfy |λₙ| &lt; 1, then limₖ→∞ Aᵏ = 0. (Powers of A converge to zero matrix.)
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 6 — Bilinear Forms and Definiteness</div>
+    <div class="box def"><div class="bl d">Definition: Bilinear Form</div>
+    f : V×V → ℝ is a <strong>bilinear form</strong> if f(v,·) and f(·,v) are each linear for every fixed v. With respect to a basis, f is represented by a matrix A: f(v,w) = bᵀAc where b,c are coordinate vectors.
+    </div>
+    <div class="box def"><div class="bl d">Change of Basis for Bilinear Forms</div>
+    If A represents f in basis v₁,…,vₙ and B is the change-of-basis matrix (wₘ = Σ bₙₘvₙ), then in basis w₁,…,wₙ: C = BᵀAB.
+    </div>
+    <div class="box def"><div class="bl d">Positive/Negative Definite</div>
+    A symmetric bilinear form (f(v,w) = f(w,v)) or its matrix A is:
+    <ul class="bl-list">
+      <li><strong>Positive definite:</strong> f(v,v) > 0 for all v ≠ 0</li>
+      <li><strong>Positive semi-definite:</strong> f(v,v) ≥ 0 for all v</li>
+      <li><strong>Negative definite:</strong> f(v,v) &lt; 0 for all v ≠ 0</li>
+      <li><strong>Negative semi-definite:</strong> f(v,v) ≤ 0 for all v</li>
+    </ul>
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 3.14 — Eigenvalues and Definiteness</div>
+    For symmetric A: positive definite ↔ all eigenvalues positive; negative definite ↔ all eigenvalues negative; semi-definite cases correspond to non-negative or non-positive eigenvalues.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 3.15 — Leading Principal Minors</div>
+    Let Aₖ be the k×k leading principal minor (top-left k×k submatrix). Then:
+    <ul class="bl-list">
+      <li><strong>Positive definite</strong> ↔ det(Aₖ) > 0 for all k = 1,…,N</li>
+      <li><strong>Negative definite</strong> ↔ (−1)ᵏ det(Aₖ) > 0 for all k = 1,…,N (alternating signs: −, +, −, +, …)</li>
+    </ul>
+    This theorem is used to check second order conditions in optimization.
+    </div>
+    <div class="box int"><div class="bl i">Why This Matters in Econ</div>
+    The Hessian matrix of a utility or profit function is a bilinear form. Checking whether a critical point is a maximum requires knowing whether the Hessian is negative (semi-)definite. Theorem 3.15 gives the practical test: check the signs of the leading principal minors.
+    </div>
+  </div>
+  <div style="text-align:right;margin-top:8px;"><button class="btn" onclick="go(2)">Next: Lecture 4 →</button></div>
+</div>
+
+<!-- ===== LECTURE 4 ===== -->
+<div class="lec" id="l2">
+  <div class="card">
+    <div class="card-title">Lecture 4</div>
+    <h2>Real Analysis I: Open/Closed Sets, Convergence, Continuity, Completeness, Compactness</h2>
+    <div class="box int"><div class="bl i">What Real Analysis Is About</div>
+    Real analysis starts from the simple idea of <em>closeness</em> of numbers and N-vectors. The set of points close to a given point is taken to be an N-dimensional ball of small radius about the point. From this we build rigorous foundations for limits, continuity, and the existence of maxima.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 1 — Open Sets, Closed Sets, Sequences</div>
+    <div class="box def"><div class="bl d">Definition: Open Ball</div>
+    For ε > 0 and y ∈ ℝᴺ, the <strong>open ball of radius ε about y</strong>: Bε(y) = {x ∈ ℝᴺ | ‖x−y‖ &lt; ε}.
+    </div>
+    <div class="box def"><div class="bl d">Definition: Open Set</div>
+    A subset U of ℝᴺ is <strong>open</strong> if for every y ∈ U, ∃ε > 0 such that Bε(y) ⊂ U. Every point is surrounded by other points in the set.
+    </div>
+    <div class="box ex"><div class="bl e">Examples of Open and Non-Open Sets</div>
+    <ul class="bl-list">
+      <li>ℝᴺ is open ✓; the empty set is open ✓</li>
+      <li>(0,1) = {x∈ℝ | 0&lt;x&lt;1} is open in ℝ ✓</li>
+      <li>[0,1] is NOT open in ℝ (endpoints have no surrounding ball inside [0,1])</li>
+      <li>{(x₁,0) | 0&lt;x₁&lt;1} is NOT open in ℝ² (any ball around a point includes points with x₂≠0)</li>
+      <li>Every open ball Bε(x) is open ✓</li>
+    </ul>
+    </div>
+    <div class="box def"><div class="bl d">Definition: Closed Set</div>
+    A subset A of ℝᴺ is <strong>closed</strong> if its complement ℝᴺ\A is open.
+    </div>
+    <div class="box def"><div class="bl d">Definition: Sequence and Convergence</div>
+    A <strong>sequence</strong> in X is a function x : {1,2,…} → X, denoted xₙ or x₁,x₂,…<br>
+    A sequence xₙ in ℝᴺ <strong>converges</strong> to x if: for every ε>0, ∃M such that ‖x−xₙ‖ &lt; ε for n ≥ M. Write limₙ→∞ xₙ = x.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 4.1 — Sequential Characterization of Closed Sets</div>
+    A subset A of ℝᴺ is closed ↔ every sequence in A that converges, converges to a point in A.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 4.2 — Properties of Open/Closed Sets</div>
+    <ul class="bl-list">
+      <li>Finite intersection of open sets is open; arbitrary union of open sets is open</li>
+      <li>Finite union of closed sets is closed; arbitrary intersection of closed sets is closed</li>
+      <li>Infinite unions of closed sets may not be closed; infinite intersections of open sets may not be open (examples: ∪[1/n,1] = (0,1]; ∩(−1/n, 1+1/n) = [0,1])</li>
+    </ul>
+    </div>
+    <p>De Morgan's laws: X\(A∪B) = (X\A)∩(X\B) and X\(A∩B) = (X\A)∪(X\B).</p>
+    <div class="box def"><div class="bl d">Relative Open/Closed Sets</div>
+    If A ⊂ B ⊂ ℝᴺ: A is <strong>open in B</strong> if for every x∈A, ∃ε>0 with Bε(x)∩B ⊂ A. Theorem 4.3: A is open in B ↔ A = B∩U for some U open in ℝᴺ.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 2 — Continuous Functions</div>
+    <div class="box def"><div class="bl d">Definition: Continuity (via Open Sets)</div>
+    Let A ⊂ ℝᴺ, B ⊂ ℝᴹ. f : A → B is <strong>continuous</strong> if for every U ⊆ B open in B, f⁻¹(U) is open in A. (Preimages of open sets are open.)
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 4.4</div>
+    f is continuous ↔ for every C ⊆ B closed in B, f⁻¹(C) is closed in A.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 4.5 — Sequential Continuity</div>
+    f : A → B is continuous ↔ limₙ→∞ f(xₙ) = f(limₙ→∞ xₙ) whenever xₙ is a sequence in A converging to a point in A. (You can pass limits through continuous functions.)
+    </div>
+    <div class="box def"><div class="bl d">Continuity at a Point</div>
+    f is <strong>continuous at x ∈ A</strong> if: for every ε>0, ∃δ>0 such that ‖f(x)−f(y)‖&lt;ε whenever ‖x−y‖&lt;δ. Theorem 4.7: f is continuous ↔ it is continuous at every point in A.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 3 — Completeness, Cauchy Sequences, Supremum</div>
+    <div class="box def"><div class="bl d">Definition: Cauchy Sequence</div>
+    A sequence x₁,x₂,… in ℝᴺ is <strong>Cauchy</strong> if: for every ε>0, ∃M such that ‖xₙ−xₘ‖ &lt; ε for all n,m > M. (Terms get arbitrarily close to each other — but convergence to what?)
+    </div>
+    <div class="box def"><div class="bl d">The Completeness Property</div>
+    Every Cauchy sequence of real numbers converges to a real number. Equivalently (Theorem 4.9): the <strong>Least Upper Bound Property</strong> — every non-empty set of numbers bounded from above has a least upper bound (supremum, sup).
+    </div>
+    <div class="box def"><div class="bl d">Supremum and Infimum</div>
+    <p>If X ⊆ ℝ is bounded above: <strong>lub(X) = sup(X)</strong> is the smallest upper bound. If bounded below: <strong>glb(X) = inf(X)</strong> is the largest lower bound.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 4 — Compact Sets: Bolzano-Weierstrass and Heine-Borel</div>
+    <div class="box def"><div class="bl d">Definition: Compact Set</div>
+    A subset A of ℝᴺ is <strong>compact</strong> if it is <em>closed and bounded</em>.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 4.12 — Bolzano-Weierstrass Theorem</div>
+    A subset A of ℝᴺ is compact ↔ every sequence in A has a subsequence that converges to a point in A.
+    <br><em>Proof idea:</em> If A is closed and bounded, enclose A in a cube, successively bisect the cube, choose the subcube containing infinitely many terms of the sequence, extract a Cauchy (hence convergent) subsequence.
+    </div>
+    <div class="box def"><div class="bl d">Open Cover and Finite Subcover</div>
+    An <strong>open cover</strong> of A is a collection U of open sets whose union contains A. A <strong>subcover</strong> is a sub-collection whose union also contains A.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 4.13 — Heine-Borel Theorem</div>
+    A subset A of ℝᴺ is compact ↔ every open cover of A contains a finite subcover.
+    </div>
+    <div class="box int"><div class="bl i">Why Compactness Matters in Econ</div>
+    Compactness guarantees existence of solutions to optimization problems. A continuous function on a compact set always achieves its maximum and minimum. Economists use this constantly: budget sets are compact (closed and bounded) → continuous utility functions achieve their maximum → demand exists.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 4.16 — Extreme Value Theorem</div>
+    If A ⊆ ℝᴺ is compact and non-empty, and f : A → ℝ is continuous, then ∃x, x̄ ∈ A such that f(x) ≤ f(z) ≤ f(x̄) for all z ∈ A. (f achieves its min and max on A.)
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 4.17 — Monotone Convergence Theorem</div>
+    Every non-decreasing sequence bounded from above converges. Every non-increasing sequence bounded from below converges.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 4.18 — Intermediate Value Theorem</div>
+    If f : [a,b] → ℝ is continuous and r is between f(a) and f(b), then ∃c ∈ [a,b] with f(c) = r. (Continuous functions take all intermediate values.)
+    </div>
+  </div>
+  <div style="text-align:right;margin-top:8px;"><button class="btn" onclick="go(3)">Next: Lecture 5 →</button></div>
+</div>
+
+<!-- ===== LECTURE 5 ===== -->
+<div class="lec" id="l3">
+  <div class="card">
+    <div class="card-title">Lecture 5</div>
+    <h2>Real Analysis II: Correspondences, Berge's Maximum Theorem, Calculus in One Variable</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 1 — Correspondences (Set-Valued Functions)</div>
+    <div class="box def"><div class="bl d">Definition: Correspondence</div>
+    If A and B are sets, ϕ : A → B is a <strong>correspondence</strong> if ϕ(a) is a subset of B for every a ∈ A. (A set-valued function — each input maps to a set of outputs, not a single point.)
+    </div>
+    <div class="box int"><div class="bl i">Why Correspondences Arise in Econ</div>
+    The solution set to an optimization problem (e.g., the set of utility-maximizing bundles given prices p) is a correspondence: for most prices there is one optimum, but at "knife-edge" prices there may be many. Berge's theorem tells us when this correspondence behaves continuously.
+    </div>
+    <div class="box def"><div class="bl d">Upper Semicontinuity (USC)</div>
+    ϕ : A → B is <strong>upper semicontinuous</strong> if: for every a ∈ A and ε > 0, ∃δ > 0 such that ϕ(x) ⊂ Bε(ϕ(a)) if x ∈ A and ‖x−a‖ &lt; δ. (The correspondence doesn't "jump outward" under small perturbations.)
+    </div>
+    <div class="box def"><div class="bl d">Lower Semicontinuity (LSC)</div>
+    ϕ : A → B is <strong>lower semicontinuous</strong> if: whenever aₙ → a in A and b ∈ ϕ(a), ∃ sequence bₙ with bₙ ∈ ϕ(aₙ) and bₙ → b. (You can trace every point in ϕ(a) by sequences from ϕ(aₙ).)
+    </div>
+    <div class="box def"><div class="bl d">Closed Graph</div>
+    ϕ : A → B has <strong>closed graph</strong> if: whenever aₙ → a, bₙ ∈ ϕ(aₙ), and bₙ → b, then b ∈ ϕ(a). (The graph {(a,b) | b ∈ ϕ(a)} is a closed set in A×B.)
+    </div>
+    <div class="box thm"><div class="bl t">Lemmas 5.1–5.2</div>
+    A function f : A → B (single-valued correspondence) is continuous ↔ it is upper semicontinuous as a correspondence ↔ it is lower semicontinuous as a correspondence.
+    </div>
+    <div class="box thm"><div class="bl t">Lemma 5.3 — USC + Closed Values → Closed Graph</div>
+    If ϕ is upper semicontinuous and ϕ(a) is closed for every a, then ϕ has closed graph.
+    </div>
+    <div class="box thm"><div class="bl t">Lemma 5.4 — Closed Graph + Compact Codomain → USC</div>
+    If ϕ has closed graph and B is compact, then ϕ is upper semicontinuous.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 2 — Berge's Maximum Theorem</div>
+    <div class="box thm"><div class="bl t">Theorem 5.5 — Berge's Maximum Theorem</div>
+    <p>Let A ⊆ ℝᴹ (non-empty), B ⊆ ℝᴺ (non-empty closed). Let ϕ : A → B be a correspondence with:</p>
+    <ul class="bl-list"><li>(a) ϕ(a) compact and non-empty for all a ∈ A, and</li><li>(b) ϕ is both upper and lower semicontinuous.</li></ul>
+    <p>Let f : A×B → ℝ be continuous. For all a ∈ A, define:</p>
+    <div class="math">h(a) = max_{b ∈ ϕ(a)} f(a,b)   and   μ(a) = {b ∈ ϕ(a) | f(a,b) = h(a)}</div>
+    <p><strong>Then:</strong> μ(a) is non-empty for all a; μ is upper semicontinuous; h is continuous.</p>
+    </div>
+    <div class="box int"><div class="bl i">Economic Meaning</div>
+    Consider utility maximization: f(p,x) = u(x) is utility, ϕ(p) = budget set at prices p. As prices p change continuously, the budget set ϕ(p) changes continuously (USC and LSC). Berge's theorem says: the maximum utility h(p) is continuous in p, and the demand correspondence μ(p) is USC. This is used to prove existence of competitive equilibrium.
+    </div>
+    <div class="box ex"><div class="bl e">Example where μ is not LSC</div>
+    A = B = [0,1], ϕ(a) = B, f(a,b) = b(a−1/2). Then μ(a) = {0} if a&lt;1/2, μ(1/2) = [0,1], μ(a) = {1} if a>1/2. At a = 1/2, the maximizer "jumps" — μ is USC but not LSC.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 3 — Calculus with One Variable</div>
+    <div class="box def"><div class="bl d">Definition: Differentiability</div>
+    f : (a,b) → ℝ is <strong>differentiable at c</strong> if ∃ number df(c)/dx such that:
+    <div class="math">lim_{x→c, x≠c} [ (f(x)−f(c))/(x−c) − df(c)/dx ] = 0</div>
+    Equivalently: |f(x)−f(c) − (df(c)/dx)(x−c)| ≤ ε|x−c| for |x−c| &lt; δ. The affine function g(x) = f(c) + (df(c)/dx)(x−c) is the best linear approximation to f near c.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 5.8 — Interior Maximum Theorem</div>
+    If f : (a,b) → ℝ is differentiable at c and achieves a relative max or min at c, then df(c)/dx = 0.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 5.9 — Rolle's Theorem</div>
+    If f : [a,b] → ℝ is continuous on [a,b] and differentiable on (a,b), and f(a) = f(b), then ∃c ∈ (a,b) with df(c)/dx = 0.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 5.10 — Mean Value Theorem</div>
+    If f : [a,b] → ℝ is continuous on [a,b] and differentiable on (a,b), then ∃c ∈ (a,b) such that:
+    <div class="math">df(c)/dx = [f(b)−f(a)] / (b−a)</div>
+    Geometrically: the slope of the tangent at some interior point equals the slope of the secant from a to b.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 5.11 — Leibniz's Rule (Product Rule)</div>
+    <div class="math">d(f(x)g(x))/dx = f(x) dg(x)/dx + df(x)/dx · g(x)</div>
+    Implies: d(xⁿ)/dx = nxⁿ⁻¹ for any integer n.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 5.12 — Chain Rule</div>
+    If f : (a,b) → (A,B) and g : (A,B) → ℝ are differentiable:
+    <div class="math">d(g∘f)(c)/dx = dg(f(c))/dy · df(c)/dx</div>
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 5.13 — Taylor's Theorem (one variable)</div>
+    Suppose f : (a,b) → ℝ has derivatives up to order n. For α,β ∈ (a,b) with α ≠ β, ∃γ strictly between α and β such that:
+    <div class="math">f(β) = f(α) + f'(α)(β−α) + (1/2)f''(α)(β−α)² + ⋯ + (1/(n−1)!)f⁽ⁿ⁻¹⁾(α)(β−α)ⁿ⁻¹ + (1/n!)f⁽ⁿ⁾(γ)(β−α)ⁿ</div>
+    The last term is the "remainder" involving an unknown interior point γ.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 5.14 — Second Derivative Test</div>
+    If f'(c) = 0 and f''(c) &lt; 0 (> 0), then f has a local maximum (minimum) at c. Memory aid: at a local max, the "bucket doesn't hold water" (concave down → f''&lt;0); at a local min, it does (convex up → f''>0).
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 5.15 — Fundamental Theorem of Calculus</div>
+    Let F(x) = ∫ₐˣ f(y) dy (indefinite integral). Then F is differentiable on (a,b) and dF(x)/dx = f(x). The integral of f is the antiderivative of f.
+    </div>
+  </div>
+  <div style="text-align:right;margin-top:8px;"><button class="btn" onclick="go(4)">Next: Lecture 6 →</button></div>
+</div>
+
+<!-- ===== LECTURE 6 ===== -->
+<div class="lec" id="l4">
+  <div class="card">
+    <div class="card-title">Lecture 6</div>
+    <h2>Multivariable Calculus: Derivatives, Jacobians, Hessians, Chain Rule, Least Squares</h2>
+    <div class="box int"><div class="bl i">Key Idea</div>
+    Multivariate calculus, like univariate, is about the local approximation of functions by affine functions. The derivative is now a linear transformation, not a number.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 1 — The Derivative as a Linear Transformation</div>
+    <div class="box def"><div class="bl d">Definition: Differentiability in ℝᴺ</div>
+    Let U be open in ℝᴺ, f : U → ℝᴹ. f is <strong>differentiable at c ∈ U</strong> if ∃ a linear transformation Df(c) : ℝᴺ → ℝᴹ (the <strong>derivative</strong>) such that:
+    <div class="math">‖f(x) − f(c) − Df(c)(x−c)‖ / ‖x−c‖ → 0   as x → c, x ≠ c</div>
+    The affine function f(c) + Df(c)(x−c) is the best linear approximation to f near c.
+    </div>
+    <div class="box thm"><div class="bl t">Lemma 6.1 — Uniqueness of the Derivative</div>
+    A function has at most one derivative at any point.
+    </div>
+    <div class="box thm"><div class="bl t">Lemma 6.3 — Differentiability Implies Continuity</div>
+    If f is differentiable at c, then f is continuous at c, and ∃B,δ>0 with ‖f(x)−f(c)‖ ≤ B‖x−c‖ for ‖x−c‖&lt;δ.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 2 — Directional Derivatives, Partial Derivatives, Jacobian</div>
+    <div class="box def"><div class="bl d">Directional Derivative</div>
+    For f : U → ℝ (U open in ℝᴺ) and v ∈ ℝᴺ:
+    <div class="math">∇ᵥf(c) = lim_{t→0, t≠0} [f(c+tv) − f(c)] / t</div>
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 6.4</div>
+    If f is differentiable at c, then ∇ᵥf(c) = Df(c)(v) for all v. The derivative gives all directional derivatives.
+    </div>
+    <div class="box def"><div class="bl d">Partial Derivative</div>
+    If eₙ is the nth standard basis vector: ∂f(c)/∂xₙ = ∇_{eₙ} f(c). In practice: hold all variables but xₙ fixed and differentiate in xₙ.
+    </div>
+    <div class="box ex"><div class="bl e">Example</div>
+    If f(x₁,x₂,x₃) = x₁x₂³x₃², then ∂f(2,4,5)/∂x₂ = 2·3·(4²)·(5²) = 2400.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 6.6 — Jacobian Matrix</div>
+    The M×N matrix of partial derivatives represents Df(c):
+    <div class="math">J = [∂fₘ(c)/∂xₙ]_{m=1..M, n=1..N}</div>
+    Called the <strong>Jacobian matrix</strong> of f at c. For f : U → ℝ (scalar), this is the row vector of partial derivatives, also called the <strong>gradient</strong> ∇f(c) = (∂f/∂x₁, …, ∂f/∂xₙ).
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 6.11 — Existence of Derivative</div>
+    If all partial derivatives ∂fₘ(x)/∂xₙ exist and are continuous on U, then f is differentiable on U. Such f is called <strong>continuously differentiable</strong>.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 3 — The Hessian and Second Derivatives</div>
+    <div class="box def"><div class="bl d">Hessian Matrix</div>
+    For f : U → ℝ (twice continuously differentiable), the <strong>Hessian</strong> D²f(x) is the N×N symmetric matrix of second partial derivatives:
+    <div class="math">[D²f(x)]ₘₙ = ∂²f(x)/(∂xₘ ∂xₙ)</div>
+    Theorem 6.12: mixed partials commute: ∂²f/∂xₙ∂xₘ = ∂²f/∂xₘ∂xₙ, so the Hessian is symmetric.
+    </div>
+    <p>The second derivative D²f(x) is a bilinear form: D²f(x)(v,w) = vᵀ D²f(x) w. It measures how the gradient changes in direction w as you move in direction v.</p>
+    <div class="box thm"><div class="bl t">Theorem 6.8 — Critical Point Condition</div>
+    If f : U → ℝ has a local max or min at c, and f is differentiable at c, then Df(c) = 0 (all partial derivatives are zero at c).
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 4 — Least Squares Estimation (Application)</div>
+    <p>Model: y = Xβ + ε, where y is N×1, X is N×K, β is K×1 unknown. The <strong>ordinary least squares (OLS)</strong> estimator b minimizes:</p>
+    <div class="math">(y−Xb)ᵀ(y−Xb) = yᵀy − 2yᵀXb + bᵀXᵀXb</div>
+    <p>Setting the derivative with respect to b to zero (using D(bᵀXᵀXb) = 2bᵀXᵀX since XᵀX is symmetric):</p>
+    <div class="math">0 = −2yᵀX + 2bᵀXᵀX   →   XᵀXb = Xᵀy</div>
+    <p>If XᵀX is invertible:</p>
+    <div class="math">b = (XᵀX)⁻¹Xᵀy</div>
+    <div class="box int"><div class="bl i">Geometric Interpretation</div>
+    The vector Xb is the <strong>orthogonal projection</strong> of y onto the column space of X. The residual y − Xb is orthogonal to every column of X: (y−Xb)ᵀX = 0. OLS literally finds the closest point in the column space of X to y.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 5 — Chain Rule and Mean Value Theorem (Multivariable)</div>
+    <div class="box thm"><div class="bl t">Theorem 6.9 — Multivariable Chain Rule</div>
+    If h(x) = g(f(x)), f differentiable at c, g differentiable at f(c), then h is differentiable at c and:
+    <div class="math">Dh(c) = Dg(f(c)) · Df(c)   (matrix multiplication of Jacobians)</div>
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 6.10 — Multivariable Mean Value Theorem</div>
+    If f : U → ℝ is differentiable and the segment from a to b lies in U, then ∃c on this segment with:
+    <div class="math">f(b) − f(a) = Df(c)(b−a)</div>
+    </div>
+    <div class="box def"><div class="bl d">Useful Special Cases of Derivatives</div>
+    <ul class="bl-list">
+      <li>f(x) = aᵀx → Df(x) = aᵀ (gradient = a)</li>
+      <li>f(x) = Ax → Df(x) = A</li>
+      <li>f(x) = xᵀAx (A symmetric) → Df(x)(v) = 2xᵀAv → matrix representation: D(xᵀAx)(c) = 2cᵀA</li>
+    </ul>
+    </div>
+  </div>
+  <div style="text-align:right;margin-top:8px;"><button class="btn gold" onclick="go(5)">Take the Quiz! →</button></div>
+</div>
+
+<!-- ===== QUIZ ===== -->
+<div class="lec" id="l5">
+  <div class="card">
+    <div class="card-title">📝 Quiz — Lectures 2–6</div>
+    <div class="score" id="sc">Score: 0 / 0</div>
+    <div id="qc"></div>
+  </div>
+</div>
+
+</div><!-- end main -->
+
+<script>
+const lecs=document.querySelectorAll('.lec');
+const navBtns=document.querySelectorAll('.lec-nav button');
+function go(i){lecs.forEach((l,j)=>l.classList.toggle('active',j===i));navBtns.forEach((b,j)=>b.classList.toggle('active',j===i));window.scrollTo({top:0,behavior:'smooth'});if(i===5)initQ();}
+
+const QS=[
+  {q:"What property distinguishes a linear transformation T : V → W from a general function?",
+   opts:["T must map vectors to scalars","T satisfies T(av₁+bv₂) = aT(v₁)+bT(v₂) for all scalars a,b","T must be invertible","T maps a basis to an orthonormal set"],
+   ans:1,fb:"Correct! A linear transformation preserves vector addition and scalar multiplication. This is the defining property: T(av₁+bv₂)=aT(v₁)+bT(v₂)."},
+  {q:"According to the Rank-Nullity Theorem (Theorem 2.9), if T : V → W and dim V = 7, rank T = 4, what is nullity T?",
+   opts:["11","4","3","7"],ans:2,fb:"Correct! rank T + nullity T = dim V → 4 + nullity T = 7 → nullity T = 3."},
+  {q:"The Gram-Schmidt process produces:",
+   opts:["A row-reduced echelon matrix","An orthonormal basis from any given basis","An invertible change-of-basis matrix","The eigenvalues of a matrix"],
+   ans:1,fb:"Correct! Gram-Schmidt takes any basis y₁,…,yₘ and constructs an orthonormal basis v₁,…,vₘ by subtracting projections onto already-computed basis vectors."},
+  {q:"For a 2×2 matrix A with rows v₁ and v₂, the determinant equals:",
+   opts:["a₁₁a₂₂ + a₁₂a₂₁","a₁₁a₂₂ − a₁₂a₂₁","‖v₁‖ · ‖v₂‖","(a₁₁+a₂₂)/2"],
+   ans:1,fb:"Correct! det(A) = a₁₁a₂₂ − a₁₂a₂₁. This is the signed area of the parallelogram formed by the rows."},
+  {q:"A subset A of ℝᴺ is compact if:",
+   opts:["It is open and bounded","It is closed and open","It is closed and bounded","It contains its boundary"],
+   ans:2,fb:"Correct! Compact = closed AND bounded. The Extreme Value Theorem applies: continuous functions on compact sets achieve their maximum and minimum."},
+  {q:"The Bolzano-Weierstrass theorem states:",
+   opts:["Every open set has a countable basis","A is compact ↔ every sequence in A has a convergent subsequence with limit in A","Every Cauchy sequence in ℝᴺ converges","Every continuous function is differentiable"],
+   ans:1,fb:"Correct! A is compact ↔ every sequence in A has a subsequence converging to a point in A. This is the sequential characterization of compactness."},
+  {q:"Berge's Maximum Theorem guarantees that, under its assumptions, the maximum-value function h(a) is:",
+   opts:["Differentiable","Constant","Continuous","Linear"],
+   ans:2,fb:"Correct! h(a) = max_{b∈ϕ(a)} f(a,b) is continuous (as a function of a) when f is continuous, ϕ is USC and LSC, and ϕ(a) is compact."},
+  {q:"The OLS estimator b = (XᵀX)⁻¹Xᵀy can be interpreted geometrically as:",
+   opts:["The projection of X onto y","The orthogonal projection of y onto the column space of X","The inverse of the Hessian of the objective","The solution to y=Xb when rank(X)&lt;K"],
+   ans:1,fb:"Correct! Xb is the orthogonal projection of y onto col(X). The residual y−Xb is perpendicular to every column of X: (y−Xb)ᵀX=0."},
+  {q:"A symmetric N×N matrix A is positive definite according to Theorem 3.15 if and only if:",
+   opts:["All eigenvalues are negative","All leading principal minor determinants are positive","det(A) > 0","The trace of A is positive"],
+   ans:1,fb:"Correct! Positive definite ↔ det(Aₖ) > 0 for all k=1,…,N. Negative definite ↔ (−1)ᵏdet(Aₖ)>0 (alternating signs). These are the leading principal minor conditions."},
+  {q:"The Jacobian matrix of f : ℝᴺ → ℝᴹ at x is:",
+   opts:["The N×N Hessian of f","The M×N matrix of all partial derivatives ∂fₘ/∂xₙ","The transpose of the gradient","A scalar equal to det(Df(x))"],
+   ans:1,fb:"Correct! The Jacobian is the M×N matrix with (m,n)ᵗʰ entry ∂fₘ(x)/∂xₙ. It represents the linear transformation Df(x) : ℝᴺ → ℝᴹ with respect to the standard bases."}
+];
+
+let answered=[],score=0,init=false;
+function initQ(){
+  if(init)return;init=true;
+  answered=new Array(QS.length).fill(false);score=0;
+  renderQ(0);
+}
+function renderQ(i){
+  if(i>=QS.length){
+    document.getElementById('qc').innerHTML=`<div class="box thm" style="text-align:center;padding:28px;"><div class="bl t">🎉 Quiz Complete!</div><p style="font-size:20px;margin:14px 0;"><strong>Score: ${score}/${QS.length}</strong></p><p>${score===QS.length?"Perfect score! Mastery achieved! 🏆":score>=7?"Strong performance!":"Review the lectures and try again."}</p><button class="btn" style="margin-top:16px;" onclick="resetQ()">Try Again</button></div>`;
+    return;
+  }
+  const q=QS[i];
+  document.getElementById('qc').innerHTML=`<div style="margin-bottom:10px;color:var(--muted);font-size:13px;font-family:Arial;">Question ${i+1} of ${QS.length}</div><div class="quiz-q">${q.q}</div><div class="quiz-opts">${q.opts.map((o,j)=>`<button class="qopt" id="o${i}${j}" onclick="ansQ(${i},${j})">${o}</button>`).join('')}</div><div class="qfb" id="fb${i}"></div><div class="qnxt" id="nx${i}"><button class="btn" onclick="renderQ(${i+1})">${i===QS.length-1?'See Results →':'Next →'}</button></div>`;
+}
+function ansQ(i,chosen){
+  if(answered[i])return;answered[i]=true;
+  const q=QS[i];const ok=chosen===q.ans;
+  if(ok)score++;
+  document.getElementById('sc').textContent=`Score: ${score}/${answered.filter(Boolean).length}`;
+  for(let j=0;j<q.opts.length;j++){const b=document.getElementById(`o${i}${j}`);if(j===q.ans)b.classList.add('ok');else if(j===chosen&&!ok)b.classList.add('no');b.disabled=true;}
+  const fb=document.getElementById(`fb${i}`);fb.className=`qfb show ${ok?'ok':'no'}`;fb.innerHTML=`<strong>${ok?'✓ Correct!':'✗ Not quite.'}</strong> ${q.fb}`;
+  document.getElementById(`nx${i}`).classList.add('show');
+}
+function resetQ(){init=false;document.getElementById('sc').textContent='Score: 0 / 0';initQ();}
+</script>
+</body>
+</html>

@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bewley Math Camp — Lectures 7–12</title>
+<style>
+:root{--navy:#0f1f3d;--blue:#1a3a6b;--accent:#2e7de0;--gold:#e8a020;--light-gold:#fef3dc;--green:#1a7a4a;--light-green:#d4f0e0;--red:#c0392b;--light-red:#fce8e6;--purple:#6d28d9;--light-purple:#ede9fe;--bg:#f4f6fa;--card:#fff;--text:#1a1a2e;--muted:#5a6680;--border:#dde2ef;--code-bg:#eef2fb;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Georgia,serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:16px;}
+.header{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;padding:28px 40px 20px;border-bottom:4px solid var(--gold);}
+.header-badge{font-family:Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+.header h1{font-size:26px;font-weight:normal;margin-bottom:4px;}
+.header .subtitle{font-size:14px;opacity:.75;font-style:italic;}
+.lec-nav{background:var(--card);border-bottom:2px solid var(--border);padding:0 24px;display:flex;gap:2px;overflow-x:auto;flex-wrap:wrap;}
+.lec-nav button{padding:12px 14px;border:none;background:none;font-size:13px;font-family:Arial,sans-serif;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .2s;}
+.lec-nav button:hover{color:var(--accent);}
+.lec-nav button.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:bold;}
+.main{max-width:920px;margin:0 auto;padding:28px 20px 60px;}
+.lec{display:none;}.lec.active{display:block;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:26px 30px;margin-bottom:22px;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.card-title{font-size:12px;font-family:Arial,sans-serif;font-weight:bold;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+h2{font-size:20px;color:var(--navy);margin-bottom:10px;font-weight:normal;}
+h3{font-size:17px;color:var(--blue);margin:16px 0 8px;}
+p{margin-bottom:11px;}
+.box{border-radius:8px;padding:15px 18px;margin:14px 0;font-size:15px;}
+.box.def{background:#e8f0fe;border-left:4px solid var(--accent);}
+.box.thm{background:var(--light-gold);border-left:4px solid var(--gold);}
+.box.ex{background:var(--light-green);border-left:4px solid var(--green);}
+.box.warn{background:var(--light-red);border-left:4px solid var(--red);}
+.box.int{background:var(--light-purple);border-left:4px solid var(--purple);}
+.box.rmk{background:#f0f4ff;border-left:4px solid #93c5fd;}
+.bl{font-family:Arial,sans-serif;font-size:11px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;}
+.bl.d{color:var(--accent);}.bl.t{color:#a06010;}.bl.e{color:var(--green);}.bl.w{color:var(--red);}.bl.i{color:var(--purple);}.bl.r{color:#3b82f6;}
+.math{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:14px 18px;margin:12px 0;font-family:'Courier New',monospace;font-size:14px;overflow-x:auto;line-height:1.9;}
+.steps{margin:12px 0;}
+.step{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.sn{min-width:30px;height:30px;background:var(--accent);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;flex-shrink:0;margin-top:2px;}
+.sb{flex:1;}
+table.gt{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px;}
+table.gt th{background:var(--navy);color:#fff;padding:9px 12px;text-align:left;font-weight:normal;font-family:Arial,sans-serif;font-size:13px;}
+table.gt td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+table.gt tr:nth-child(even) td{background:var(--bg);}
+.quiz-q{font-size:16px;margin-bottom:14px;color:var(--navy);}
+.quiz-opts{display:grid;gap:9px;}
+.qopt{background:var(--bg);border:2px solid var(--border);border-radius:8px;padding:11px 16px;cursor:pointer;font-size:15px;transition:all .2s;font-family:Georgia,serif;text-align:left;}
+.qopt:hover{border-color:var(--accent);background:#e8f0fe;}
+.qopt.ok{border-color:var(--green);background:var(--light-green);}
+.qopt.no{border-color:var(--red);background:var(--light-red);}
+.qfb{margin-top:12px;padding:12px;border-radius:8px;display:none;font-size:14px;}
+.qfb.show{display:block;}
+.qfb.ok{background:var(--light-green);color:#0d5c34;border-left:4px solid var(--green);}
+.qfb.no{background:var(--light-red);color:#8b1a12;border-left:4px solid var(--red);}
+.qnxt{margin-top:12px;display:none;}.qnxt.show{display:block;}
+.btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:14px;font-family:Arial,sans-serif;cursor:pointer;transition:background .2s;}
+.btn:hover{background:var(--navy);}
+.btn.gold{background:var(--gold);color:var(--navy);}
+.score{font-family:Arial,sans-serif;font-size:14px;color:var(--muted);text-align:right;margin-bottom:8px;}
+ul.bl-list{margin:8px 0 8px 22px;line-height:2.1;}
+ol.nl{margin:8px 0 8px 22px;line-height:2.1;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-badge">Yale Econ Math Camp · Bewley Notes 2020</div>
+  <h1>Lectures 7–11: Major Theorems, Optimization, Kuhn-Tucker, Dynamic Programming</h1>
+  <div class="subtitle">All content directly from Truman Bewley's notes</div>
+</div>
+
+<div class="lec-nav">
+  <button class="active" onclick="go(0)">📖 Lec 7: Major Theorems</button>
+  <button onclick="go(1)">📖 Lec 8: Optimization</button>
+  <button onclick="go(2)">📖 Lec 9: Kuhn-Tucker Proof</button>
+  <button onclick="go(3)">📖 Lec 10: Dynamic Prog. II</button>
+  <button onclick="go(4)">📖 Lec 11: Dynamic Prog. III</button>
+  <button onclick="go(5)">✅ Quiz</button>
+</div>
+
+<div class="main">
+
+<!-- ===== LECTURE 7 ===== -->
+<div class="lec active" id="l0">
+  <div class="card">
+    <div class="card-title">Lecture 7</div>
+    <h2>Major Theorems of Multivariable Calculus: Taylor's Theorem, Inverse &amp; Implicit Function Theorems, Envelope Theorem, Constrained Optimization</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 1 — Taylor's Theorem (Multivariable)</div>
+    <div class="box thm"><div class="bl t">Theorem 7.1 — Taylor's Theorem (Multivariate)</div>
+    Let f : U → ℝ (U open in ℝᴺ). Suppose U contains the segment from a to b (a ≠ b), and f is r times differentiable. Then ∃q on the segment (q ≠ a, q ≠ b) such that:
+    <div class="math">f(b) = f(a) + Df(a)(b−a) + (1/2)D²f(a)(b−a,b−a) + ⋯
+       + (1/(r−1)!)Dʳ⁻¹f(a)(b−a,…,b−a) + (1/r!)Dʳf(q)(b−a,…,b−a)</div>
+    where the last term is the <strong>remainder</strong> at some interior point q.
+    </div>
+    <p>Expanding the terms explicitly:</p>
+    <div class="math">Df(a)(b−a) = Σₙ ∂f(a)/∂xₙ · (bₙ−aₙ)
+
+D²f(a)(b−a,b−a) = Σₘ Σₙ ∂²f(a)/(∂xₘ∂xₙ) · (bₘ−aₘ)(bₙ−aₙ)</div>
+    <div class="box thm"><div class="bl t">Theorem 7.2 — Remainder Vanishes</div>
+    If f is r times continuously differentiable, the remainder R(a,b) = (1/r!)Dʳf(q)(b−a,…,b−a) satisfies: R(a,b)/‖b−a‖ʳ⁻¹ → 0 as b → a.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 7.3 — Second Order Conditions</div>
+    Let f : U → ℝ, twice continuously differentiable, with Df(c) = 0. If D²f(c) is <strong>negative definite</strong>, f has a local maximum at c. If D²f(c) is <strong>positive definite</strong>, f has a local minimum at c.
+    <br><em>Proof:</em> By Taylor's theorem, f(x) = f(c) + (1/2)D²f(q)(x−c,x−c). Negative definiteness of D²f(q) near c makes this negative, so f(x) &lt; f(c).
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 2 — Inverse Function Theorem</div>
+    <p>The inverse function theorem says that if Df(c) is invertible, then f has a local inverse near f(c). The derivative behaves locally as an invertible linear transformation.</p>
+    <div class="box thm"><div class="bl t">Theorem 7.4 — Inverse Function Theorem</div>
+    Let f : U → ℝᴺ (U open in ℝᴺ), f continuously differentiable, and Df(c) invertible at c ∈ U. Then ∃ open V ⊂ U containing c such that W = f(V) is open, ∃ continuously differentiable g : W → V with f∘g(w) = w and g∘f(v) = v for all w ∈ W, v ∈ V. Moreover, if v ∈ V:
+    <div class="math">Dg(f(v)) = (Df(v))⁻¹</div>
+    </div>
+    <div class="box ex"><div class="bl e">Example</div>
+    Let y = (x⁵+eˣ)/(1+x)². At x=0, y=1 and the derivative = −1 ≠ 0. By the inverse function theorem, x is locally a function of y near (x,y)=(0,1), and dx/dy = 1/(dy/dx) = −1.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 3 — Implicit Function Theorem</div>
+    <p>For linear functions: if T : ℝᴺ⁺ᴷ → ℝᴷ has K independent columns (full rank K), write T = (A|B) where B is K×K invertible. Then z = Ax + By → y = B⁻¹(z−Ax). The equation z = T(x,y) defines y as a linear function of (x,z).</p>
+    <p>The implicit function theorem extends this to nonlinear functions locally:</p>
+    <div class="box thm"><div class="bl t">Theorem 7.5 — Implicit Function Theorem</div>
+    Let Q be open in ℝᴺ⁺ᴷ, f : Q → ℝᴷ continuously differentiable, (a,b) ∈ Q (a ∈ ℝᴺ, b ∈ ℝᴷ), and the last K columns of Df(a,b) independent. Then ∃ open U ∋ a in ℝᴺ, open V ∋ c=f(a,b) in ℝᴷ, and continuously differentiable h : U×V → ℝᴷ such that f(x,h(x,z)) = z for all x ∈ U, z ∈ V, with h(a,c) = b. Also:
+    <div class="math">Dₓh(a,c) = −(D_y f(a,b))⁻¹ Dₓf(a,b)
+Dᵤh(a,c) = (D_y f(a,b))⁻¹</div>
+    </div>
+    <div class="box ex"><div class="bl e">Circle Example</div>
+    f(x,y) = x² + y², equation f=r². If |x̄|&lt;r̄ and x̄²+ȳ²=r̄², then ȳ≠0 so ∂f/∂y=2ȳ≠0. By IFT, y is locally a function of x and r: either y=√(r²−x²) or y=−√(r²−x²).
+    </div>
+    <div class="box int"><div class="bl i">Derivative Formulas via Chain Rule</div>
+    Differentiating f(x,h(x,z))=z w.r.t. x: Dₓf + D_y f · Dₓh = 0 → Dₓh = −(D_y f)⁻¹Dₓf. The IFT formula follows directly from the chain rule applied at the solution point.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 4 — The Envelope Theorem (Unconstrained)</div>
+    <p>Consider max_{x∈ℝᴺ} f(x,b) where b ∈ ℝᴷ are parameters. Let F(b) = max_x f(x,b) (assuming the max exists). The envelope theorem says:</p>
+    <div class="box thm"><div class="bl t">The Envelope Theorem</div>
+    Assume f is twice continuously differentiable, Dx²f(x,b) is negative definite for all (x,b), and x=h(b) solves Dxf(h(b),b)=0 (by IFT, h is continuously differentiable). Then:
+    <div class="math">DF(b)|_{b=b̄} = D_b f(h(b̄), b)|_{b=b̄}</div>
+    <em>To find how the maximized value changes in b, evaluate the partial derivative of f w.r.t. b at the optimum — you do NOT need to account for how the maximizer x changes with b.</em>
+    </div>
+    <div class="box int"><div class="bl i">Why? The Intuition</div>
+    At the maximum, Dₓf = 0. So the "indirect effect" via x is: Dₓf · Dh = 0. Only the direct effect of b on f survives. This is why the formula is so clean.
+    </div>
+    <div class="box ex"><div class="bl e">Profit Maximization Example</div>
+    Firm: π(p,w) = max_L [pf(L) − wL]. The envelope theorem gives:
+    <div class="math">∂π/∂w = −L(p,w)   (Shephard's Lemma: wage derivative of profit = −labor demand)
+∂π/∂p = f(L(p,w))  (price derivative of profit = output supply)</div>
+    These are fundamental results in producer theory.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 5 — Constrained Optimization (Lagrange Multipliers)</div>
+    <div class="box thm"><div class="bl t">Theorem 7.6 — Lagrange Multiplier Theorem (Necessary Conditions)</div>
+    Consider max_x f(x) s.t. gₖ(x) = āₖ for k=1,…,K (U open in ℝᴺ). If f achieves a local max/min at x̄ and the constraint qualification holds (Dg₁(x̄),…,DgK(x̄) are independent), then ∃λ₁,…,λK such that:
+    <div class="math">Df(x̄) = Σₖ λₖ Dgₖ(x̄)</div>
+    The λₖ are <strong>Lagrange multipliers</strong>.
+    </div>
+    <div class="box def"><div class="bl d">The Lagrangian</div>
+    <div class="math">L(x,λ,ā) = f(x) − Σₖ λₖ[gₖ(x) − āₖ]</div>
+    Setting D_{(x,λ)}L = 0 gives first order conditions (∂L/∂xₙ = 0) and constraints (∂L/∂λₖ = 0, i.e., gₖ(x)=āₖ).
+    </div>
+    <div class="box int"><div class="bl i">Geometric Meaning</div>
+    At the constrained maximum x̄, the gradient Df(x̄) must be a linear combination of the constraint gradients Dgₖ(x̄). Geometrically in 2D (K=1): the level curve of f through x̄ is tangent to the constraint curve g(x)=ā. The gradient Df points perpendicularly to the level curve, and Dg perpendicularly to the constraint curve — tangency means they point in the same (or opposite) direction.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 7.7 — Sufficient Conditions (Second Order)</div>
+    Let Z(x̄) = {v ∈ ℝᴺ | Dg(x̄)(v) = 0} (the "constrained directions"). With λ from Thm 7.6 and the Lagrangian L:
+    <ul class="bl-list">
+      <li>If vᵀDx²L(x̄,λ,ā)v &lt; 0 for all v ∈ Z(x̄), v≠0: local maximum at x̄</li>
+      <li>If vᵀDx²L(x̄,λ,ā)v > 0 for all v ∈ Z(x̄), v≠0: local minimum at x̄</li>
+    </ul>
+    </div>
+    <div class="box thm"><div class="bl t">Summary of Conditions</div>
+    <ol class="nl">
+      <li>Constraint: g(x̄) = ā (feasibility)</li>
+      <li>First order condition: Df(x̄) = λᵀDg(x̄) (necessary)</li>
+      <li>Second order condition: vᵀDx²L·v &lt; 0 for v ∈ Z(x̄)\{0} (sufficient for max)</li>
+      <li>Conditions 1+2+3 together are sufficient for local optimality</li>
+    </ol>
+    </div>
+  </div>
+  <div style="text-align:right;margin-top:8px;"><button class="btn" onclick="go(1)">Next: Lecture 8 →</button></div>
+</div>
+
+<!-- ===== LECTURE 8 ===== -->
+<div class="lec" id="l1">
+  <div class="card">
+    <div class="card-title">Lecture 8</div>
+    <h2>Optimization: Convexity, Kuhn-Tucker Theory, Envelope Theorem for Constrained Problems</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 1 — Convex Analysis</div>
+    <div class="box def"><div class="bl d">Definition: Convex Set</div>
+    A subset A of ℝᴺ is <strong>convex</strong> if for every a,b ∈ A and α ∈ [0,1]: αa + (1−α)b ∈ A. (The line segment between any two points stays in the set.)
+    </div>
+    <div class="box def"><div class="bl d">Definition: Concave Function</div>
+    f : A → ℝ (A convex) is <strong>concave</strong> if for all a,b ∈ A and α ∈ [0,1]:
+    <div class="math">f(αa + (1−α)b) ≥ αf(a) + (1−α)f(b)</div>
+    <strong>Strictly concave</strong>: strict inequality for a ≠ b, 0 &lt; α &lt; 1.
+    </div>
+    <div class="box def"><div class="bl d">Definition: Convex Function</div>
+    f is <strong>convex</strong> if f(αa+(1−α)b) ≤ αf(a)+(1−α)f(b). (f is convex iff −f is concave.)
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 8.1 — Local = Global for Concave Functions</div>
+    If A is convex and f : A → ℝ is <strong>concave</strong>, any local maximum of f is a global maximum.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 8.2 — Uniqueness for Strictly Concave</div>
+    If f is <strong>strictly concave</strong>, f achieves a global maximum at at most one point.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 8.3 — FOC for Global Max (Concave + Differentiable)</div>
+    If A is convex and open, f : A → ℝ is concave and differentiable: f achieves a global maximum at a ∈ A ↔ Df(a) = 0.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 8.7 — Second Derivative and Concavity/Convexity</div>
+    If A is convex and open, f twice differentiable everywhere:
+    <ol class="nl">
+      <li>f is concave ↔ D²f(x) is negative semi-definite for all x</li>
+      <li>f is strictly concave if D²f(x) is negative definite for all x</li>
+      <li>f is convex ↔ D²f(x) is positive semi-definite for all x</li>
+      <li>f is strictly convex if D²f(x) is positive definite for all x</li>
+    </ol>
+    Note: negative definiteness of D²f is sufficient but not necessary for strict concavity (example: f(x) = −x⁴ is strictly concave but f''(0)=0).
+    </div>
+    <div class="box int"><div class="bl i">Why Concavity is Central to Econ</div>
+    Utility functions are assumed concave → the first order conditions (MU₁/p₁ = MU₂/p₂ = λ) are sufficient for a global maximum → demand is well-defined. Production functions often assumed concave → diminishing returns. If f is strictly concave, there is a unique maximizer → unique demand, unique equilibrium.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 2 — Kuhn-Tucker Theory (Inequality Constraints)</div>
+    <p>Extends Lagrange multiplier theory to inequality constraints. Consider:</p>
+    <div class="math">max f(x)   s.t. gₖ(x) ≤ āₖ, for k=1,…,K
+ x∈C</div>
+    <p>where C ⊆ ℝᴺ is non-empty and convex, f : C → ℝ is concave, each gₖ : C → ℝ is convex.</p>
+    <div class="box def"><div class="bl d">Feasibility and Complementary Slackness</div>
+    <p>x ∈ C is <strong>feasible</strong> if gₖ(x) ≤ āₖ for all k.</p>
+    <p><strong>Complementary slackness</strong>: λₖ = 0 if gₖ(x̄) &lt; āₖ. (A non-binding constraint has zero multiplier.)</p>
+    <p>The <strong>Lagrangian</strong>: L(x,λ) = f(x) − Σₖ λₖgₖ(x).</p>
+    <p>The numbers λ₁,…,λK are called <strong>Kuhn-Tucker coefficients</strong>. x̄ and λ satisfy the <strong>Kuhn-Tucker conditions</strong> if: x̄ is feasible, λ ∈ ℝᴷ₊ (non-negative), complementary slackness holds, and x̄ maximizes L(x,λ) over C.</p>
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 8.8 — Kuhn-Tucker Theorem</div>
+    <p><strong>Sufficiency:</strong> If x̄ and λ ∈ ℝᴷ₊ satisfy the Kuhn-Tucker conditions (complementary slackness + x̄ maximizes L over C), then x̄ solves the constrained problem.</p>
+    <p><strong>Necessity:</strong> If x̄ solves the problem and the <strong>constraint qualification</strong> holds (∃x ∈ C with gₖ(x) &lt; āₖ for all k), then ∃λ ∈ ℝᴷ₊ such that the Kuhn-Tucker conditions hold.</p>
+    </div>
+    <div class="box int"><div class="bl i">Difference from Lagrange Multipliers</div>
+    Lagrange multipliers: equality constraints, differentiable functions, multipliers can be any sign. Kuhn-Tucker: inequality constraints, concave/convex functions (no differentiability needed), multipliers are non-negative (≥0). KT is the workhorse of economic optimization — budget constraints, non-negativity constraints, capacity constraints are all inequalities.
+    </div>
+    <div class="box ex"><div class="bl e">Consumer Problem Example</div>
+    <div class="math">max u(x)   s.t. p·x ≤ w, x ≥ 0</div>
+    KT conditions: ∂u/∂xₙ ≤ λpₙ with equality if xₙ > 0 (complementary slackness). Non-negativity: xₙ ≥ 0, μₙ ≥ 0, μₙxₙ = 0. Constraint qualification: x=0 satisfies p·0 = 0 &lt; w (if w>0).
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 3 — Dependence of Constrained Optima on Parameters</div>
+    <p>Continuing with max f(x) s.t. gₖ(x) = āₖ. How does the optimal x and Lagrange multipliers λ change as the constraint levels a = (a₁,…,aK) vary? The necessary conditions are:</p>
+    <div class="math">Df(x) − λᵀDg(x) = 0
+−g(x) + a = 0</div>
+    <p>Write this as H(x,λ,a) = 0. By the IFT, (x,λ) is a continuously differentiable function of a provided the bordered Hessian is non-singular:</p>
+    <div class="math">D_{(x,λ)}H(x̄,λ̄,ā) = [Dx²L   −(Dg)ᵀ]
+                          [−Dg       0   ]</div>
+    <p>This is the <strong>bordered Hessian</strong>. The second order conditions guarantee it is non-singular (rank N+K).</p>
+    <div class="box thm"><div class="bl t">Lagrange Multipliers as Marginal Values</div>
+    Let F(a) = f(x(a)) be the maximized value. By the chain rule and the envelope argument:
+    <div class="math">DF(a) = λᵀ(a)</div>
+    So <strong>λₖ(a) is the rate at which the maximized value increases as constraint level aₖ increases</strong>. This is the "shadow price" of the constraint.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 4 — Envelope Theorem for Constrained Optimization</div>
+    <p>Consider max_x f(x,b) s.t. g(x,c) = a, with parameters a, b, c. Let F(a,b,c) = f(x(a,b,c),b). The envelope theorem (Bewley equation 8.6) states:</p>
+    <div class="math">DF(ā,b̄,c̄) = D_{(a,b,c)} L(x̄, λ̄, a, b, c)|_{(a,b,c)=(ā,b̄,c̄)}</div>
+    <p>where L(x,λ,a,b,c) = f(x,b) − λᵀ[g(x,c) − a]. In component form:</p>
+    <div class="math">Da F = λ̄ᵀ     (shadow price: matches earlier result)
+Db F = Db f(x̄, b̄)    (direct effect of b on objective)
+Dc F = −λ̄ᵀ Dc g(x̄, c̄)    (effect via constraint function)</div>
+    <div class="box ex"><div class="bl e">Cobb-Douglas Consumer Demand</div>
+    Utility u(x) = Σₙ αₙ ln(xₙ). Budget: Σₙ pₙxₙ = w. FOC: αₙ/xₙ = λpₙ. At optimum:
+    <div class="math">xₙ = αₙ/λpₙ    and    Σ pₙxₙ = w → λ = (Σαₙ)/w
+
+→ xₙ = αₙw/(pₙ Σ αₖ)</div>
+    Each good's expenditure is a fixed fraction αₙ/Σαₖ of total wealth w. This is a fundamental result: Cobb-Douglas implies constant expenditure shares.
+    </div>
+  </div>
+  <div style="text-align:right;margin-top:8px;"><button class="btn" onclick="go(2)">Next: Lecture 9 →</button></div>
+</div>
+
+<!-- ===== LECTURE 9 ===== -->
+<div class="lec" id="l2">
+  <div class="card">
+    <div class="card-title">Lecture 9</div>
+    <h2>Proof of the Kuhn-Tucker Theorem; Dynamic Programming I</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 1 — Proof of Sufficiency (Kuhn-Tucker)</div>
+    <div class="box thm"><div class="bl t">Theorem 9.1 — KT Sufficiency</div>
+    Let C be a non-empty convex set, f : C → ℝ concave, gₖ : C → ℝ convex. Suppose x̄ ∈ C satisfies gₖ(x̄) ≤ āₖ, λ ∈ ℝᴷ₊ satisfies complementary slackness (λₖ=0 if gₖ(x̄)&lt;āₖ), and x̄ maximizes f(x) − Σλₖgₖ(x) over C. Then x̄ solves max f(x) s.t. gₖ(x) ≤ āₖ.
+    <br><em>Proof:</em> Complementary slackness → Σλₖgₖ(x̄) = Σλₖāₖ. For any feasible x: f(x̄) − Σλₖāₖ = f(x̄) − Σλₖgₖ(x̄) ≥ f(x) − Σλₖgₖ(x) ≥ f(x) − Σλₖāₖ. Therefore f(x̄) ≥ f(x). ∎
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 2 — The Value Function and Subgradients</div>
+    <div class="box def"><div class="bl d">Definition: Value Function</div>
+    V(a₁,…,aK) = sup{f(x) | x ∈ C and gₖ(x) ≤ aₖ for all k}. The domain A = {a | ∃x ∈ C with gₖ(x) ≤ aₖ for all k}.
+    </div>
+    <div class="box thm"><div class="bl t">Lemma 9.2</div>
+    The set A is convex and the value function V : A → ℝ is concave.
+    </div>
+    <div class="box def"><div class="bl d">Definition: Subgradient</div>
+    A <strong>subgradient</strong> of f : A → ℝ at a ∈ A is a vector λ ∈ ℝᴷ such that f(b) ≤ f(a) + λᵀ(b−a) for all b ∈ A. (Generalizes the derivative to concave, possibly non-differentiable functions.)
+    </div>
+    <div class="box int"><div class="bl i">Subgradients and KT Multipliers</div>
+    If f is concave and differentiable at a, the unique subgradient at a is Df(a). If f is not differentiable, multiple subgradients may exist (like different tangent lines at a kink). The KT coefficients λ are a subgradient of the value function V at ā — this is their economic meaning: each λₖ is the (generalized) marginal value of relaxing constraint k.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 9.3 — KT Coefficients are Subgradients of V</div>
+    Under the KT conditions (x̄ satisfying complementary slackness and maximizing L), λ is a subgradient of V at ā.
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 9.4 — Converse: Subgradients give KT Conditions</div>
+    If λ ∈ ℝᴷ is a subgradient of V at ā, then λ ≥ 0, λₖ=0 if gₖ(x̄)&lt;āₖ, and x̄ solves max f(x)−Σλₖgₖ(x) over C. (Subgradients of V are exactly KT multipliers.)
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 3 — Minkowski Separation Theorem</div>
+    <div class="box def"><div class="bl d">Definition: Separating Vector</div>
+    An N-vector p separates sets X and Y if p ≠ 0 and p·x ≤ p·y for all x ∈ X, y ∈ Y.
+    </div>
+    <p>Geometrically: a hyperplane {x | p·x = r} separates X from Y, with X on one side and Y on the other.</p>
+    <div class="box def"><div class="bl d">Definition: Interior</div>
+    int(X) = {x ∈ X | ∃ε>0: Bε(x) ⊂ X}. The interior of [0,1] is (0,1).
+    </div>
+    <div class="box thm"><div class="bl t">Theorem 9.5 — Minkowski Separation Theorem</div>
+    Let X and Y be convex subsets of ℝᴺ. If int(X) is non-empty and does not intersect Y, then ∃ non-zero p separating X from Y.
+    </div>
+    <div class="box rmk"><div class="bl r">Necessity of Convexity</div>
+    Convexity of both sets is required. Non-convex sets that are disjoint may not be separable. Also, the interior assumption is needed: two convex sets that touch along a boundary (empty interior) may not be separable.
+    </div>
+    <div class="box thm"><div class="bl t">Lemma 9.6</div>
+    If A is convex, f : A → ℝ is concave, and ā ∈ int(A), then f has a subgradient at ā. (Proven using Minkowski's theorem applied to the epigraph of f.)
+    </div>
+    <p>The proof of the <em>necessity</em> of KT conditions uses Lemma 9.6 and Theorem 9.4: the value function V is concave (Lemma 9.2), ā ∈ int(A) (constraint qualification), so V has a subgradient λ at ā (Lemma 9.6), and by Theorem 9.4 λ satisfies the KT conditions.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 4 — Dynamic Programming I</div>
+    <p>The second part of Lecture 9 introduces dynamic programming (DP) to solve infinite-horizon optimization problems. Here Bewley introduces the setup:</p>
+    <div class="box def"><div class="bl d">The Infinite-Horizon Problem Setup</div>
+    <p>State space X ⊆ ℝᴺ (compact). Feasibility: G(x) ⊆ X is the set of states reachable from x in one period. Instantaneous utility u : A → ℝ, where A = {(x,y) ∈ X×X | y ∈ G(x)}. Discount factor 0 &lt; β &lt; 1.</p>
+    <p>A <strong>program</strong> starting at x₀ is a sequence (x₀,x₁,x₂,…) with xₜ₊₁ ∈ G(xₜ) for all t.</p>
+    <p>Objective: maximize Σₜ₌₀∞ βᵗ u(xₜ,xₜ₊₁).</p>
+    </div>
+    <div class="box def"><div class="bl d">The Bellman Equation</div>
+    The <strong>value function</strong>: V(x₀) = sup of Σβᵗu(xₜ,xₜ₊₁) over all programs from x₀. The Bellman equation is:
+    <div class="math">V(x₀) = max_{x₁ ∈ G(x₀)} [u(x₀,x₁) + βV(x₁)]</div>
+    The value today = best achievable: immediate utility + β × value from tomorrow.
+    </div>
+    <div class="box int"><div class="bl i">Why DP is Powerful</div>
+    Instead of optimizing over infinite sequences, DP reduces the problem to a single-period decision: given the state x₀, choose x₁ ∈ G(x₀) to maximize current utility plus discounted continuation value. The Bellman equation is a fixed-point equation: V is its own "one-period recursion."
+    </div>
+  </div>
+  <div style="text-align:right;margin-top:8px;"><button class="btn" onclick="go(3)">Next: Lecture 10 →</button></div>
+</div>
+
+<!-- ===== LECTURE 10 ===== -->
+<div class="lec" id="l3">
+  <div class="card">
+    <div class="card-title">Lecture 10</div>
+    <h2>Dynamic Programming II: Euler Equations, Growth Model Example</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 1 — Worked Example: Optimal Growth</div>
+    <div class="box ex"><div class="bl e">Example 10.1 — Neoclassical Growth Model</div>
+    Production function: y = F(K) = 2√K. Utility: v(C) = ln(C). Discount factor: 0 &lt; β &lt; 1.
+    <p>Problem: maximize Σₜ₌₀∞ βᵗ ln(Cₜ) subject to Cₜ + Kₜ ≤ 2√K_{t−1} for t = 0,1,2,…</p>
+    <p><strong>Euler Equation:</strong> Differentiating the Lagrangian with respect to Kₜ:</p>
+    <div class="math">1/Cₜ = β · (1/Cₜ₊₁) · (1/√Kₜ)
+
+Or:  Cₜ₊₁ = β · Cₜ/√Kₜ   (equation 10.1)</div>
+    <p>The Euler equation equates the marginal utility of consuming today to the discounted marginal utility of investing and consuming tomorrow.</p>
+    </div>
+    <div class="box def"><div class="bl d">Constant Savings Rate Solution</div>
+    <p>Guess: Kₜ = s · F(K_{t−1}) = s · 2√K_{t−1} (constant fraction s of output is saved). Then Cₜ = (1−s) · 2√K_{t−1}.</p>
+    <p>Substituting into the Euler equation gives: Kₜ = β√K_{t−1}. So s = β/2.</p>
+    <p>The difference equation Kₜ = β√K_{t−1} converges: lim_{t→∞} Kₜ = β². The steady state is K* = β².</p>
+    </div>
+    <div class="box int"><div class="bl i">Economic Interpretation</div>
+    The optimal savings rate is β/2. Higher β (more patient) → save more → higher steady state capital. The dynamics: starting at any K₀, the capital stock converges monotonically to K* = β². Consumption also converges to C* = 2β − β² = β(2−β).
+    </div>
+    <div class="box def"><div class="bl d">Optimality of the Constant Savings Path</div>
+    <p>Define aₜ = Cₜ/(2√K_{t−1}) (fraction of output consumed in period t). With a₀ = 1−s = 1−β/2:</p>
+    <div class="math">aₜ₊₁ = β · aₜ(1−aₜ) / [(1−aₜ)] + aₜ(1−β)   [from Euler + feasibility]</div>
+    <p>Any path with a₀ ≠ 1−β/2 either violates feasibility eventually (Cₜ &lt; 0 or Kₜ &lt; 0) or converges to a path that is dominated. Only a₀ = 1−β/2 generates the optimal program for all t.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 2 — General DP Theory: Lemmas and Value Function</div>
+    <div class="box def"><div class="bl d">Assumptions 1–4 (from Lecture 9)</div>
+    <ol class="nl">
+      <li>X is compact, G : X → X has closed graph, G(x) ≠ ∅ for all x</li>
+      <li>u : A → ℝ is continuous and bounded: |u| ≤ b</li>
+      <li>0 &lt; β &lt; 1</li>
+      <li>For each x₀ ∈ X, ∃ a feasible program from x₀</li>
+    </ol>
+    </div>
+    <div class="box thm"><div class="bl t">Lemma 10.3 — Converse of Max-max</div>
+    max_{y ∈ Y} max_{z ∈ Z} f(y,z) = max_{(y,z): y∈Y, z∈Z} f(y,z). This allows us to "unpack" nested maximizations — used extensively in proving V satisfies Bellman.
+    </div>
+    <div class="box thm"><div class="bl t">Existence of Optimal Program (Theorem 9.8, proven in Lec 10)</div>
+    Under Assumptions 1–4, the value function V satisfies the Bellman equation and the optimal program exists (can be constructed by sequential greedy maximization of u(xₜ,xₜ₊₁) + βV(xₜ₊₁)).
+    </div>
+  </div>
+  <div style="text-align:right;margin-top:8px;"><button class="btn" onclick="go(4)">Next: Lecture 11 →</button></div>
+</div>
+
+<!-- ===== LECTURE 11 ===== -->
+<div class="lec" id="l4">
+  <div class="card">
+    <div class="card-title">Lecture 11</div>
+    <h2>Dynamic Programming III: Contraction Mapping Theorem, Existence and Uniqueness of Value Function</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 1 — Uniqueness of the Value Function</div>
+    <div class="box thm"><div class="bl t">Theorem 11.1 — V is the Unique Bounded Solution to Bellman</div>
+    Suppose F : X → ℝ is bounded and satisfies the Bellman equation: F(x₀) = max_{x₁ ∈ G(x₀)} [u(x₀,x₁) + βF(x₁)] for all x₀. Then F = V.
+    <br><em>Proof sketch:</em> Use the Bellman equation to build a program (x₀,x₁,x₂,…) that maximizes F. Show this program achieves V(x₀). Key: F(xₜ) satisfies the Bellman equation at each step, so by induction F(x₀) = Σᵀₜ₌₀ βᵗu(xₜ,xₜ₊₁) + β^{T+1}F(x_{T+1}). Take T→∞; the last term → 0 (since F is bounded and β&lt;1), so F(x₀) = V(x₀). ∎
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 2 — Contraction Mapping Theorem</div>
+    <div class="box def"><div class="bl d">Definition: Metric Space and Norm</div>
+    A <strong>metric space</strong> (M,d) is a set M with a distance function d : M×M → ℝ₊ satisfying: d(x,y) ≥ 0; d(x,y)=0 iff x=y; d(x,y)=d(y,x); d(x,z) ≤ d(x,y)+d(y,z) (triangle inequality). The set of bounded functions f : X → ℝ with sup-norm ‖f‖ = sup_{x∈X}|f(x)| is a metric space.
+    </div>
+    <div class="box def"><div class="bl d">Definition: Contraction Mapping</div>
+    T : M → M is a <strong>contraction mapping</strong> with modulus β ∈ (0,1) if d(T(x),T(y)) ≤ β d(x,y) for all x,y ∈ M.
+    </div>
+    <div class="box thm"><div class="bl t">Contraction Mapping Theorem (Banach Fixed Point)</div>
+    If (M,d) is a complete metric space (every Cauchy sequence converges) and T : M → M is a contraction mapping with modulus β &lt; 1, then ∃ unique x* ∈ M with T(x*)=x* (a fixed point). Moreover, for any x₀ ∈ M, the sequence x_{n+1} = T(xₙ) converges to x* and d(xₙ,x*) ≤ βⁿ/(1−β) · d(x₁,x₀).
+    </div>
+    <div class="box int"><div class="bl i">Why This Proves V Exists</div>
+    Define the Bellman operator T by (Tf)(x₀) = max_{x₁ ∈ G(x₀)} [u(x₀,x₁) + βf(x₁)]. Show T is a contraction on the space of bounded continuous functions (with sup-norm). The Contraction Mapping Theorem guarantees a unique fixed point V = TV. This V is continuous (T maps continuous functions to continuous functions), bounded, and satisfies the Bellman equation. No need for the program to be differentiable or explicitly computable.
+    </div>
+    <div class="box thm"><div class="bl t">T is a Contraction (Blackwell's Conditions)</div>
+    The Bellman operator T satisfies two conditions sufficient for being a contraction:
+    <ol class="nl">
+      <li><strong>Monotonicity:</strong> If f ≤ g pointwise, then Tf ≤ Tg.</li>
+      <li><strong>Discounting:</strong> T(f+c) ≤ Tf + βc for any constant c ≥ 0.</li>
+    </ol>
+    Together these imply T is a contraction with modulus β.
+    </div>
+    <div class="box def"><div class="bl d">Algorithm: Value Function Iteration</div>
+    <ol class="nl">
+      <li>Start with any bounded function V₀ (e.g., V₀ ≡ 0)</li>
+      <li>Compute Vₙ₊₁ = T(Vₙ) repeatedly</li>
+      <li>By the Contraction Mapping Theorem, Vₙ → V in sup-norm at rate βⁿ</li>
+    </ol>
+    This is computable when X is finite or discretizable. The policy function π(x) = argmax_{y∈G(x)} [u(x,y) + βV(y)] is the optimal decision rule.
+    </div>
+    <div class="box int"><div class="bl i">Significance for Macro/Trade</div>
+    Dynamic programming and the Bellman equation are the foundation of modern macroeconomics (recursive competitive equilibrium, Bewley heterogeneous agent models, Stokey-Lucas theory of optimal growth) and trade theory (dynamic models of firm entry, technology adoption). The contraction mapping theorem guarantees these models are well-posed with unique value functions.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Section 3 — Properties of the Value Function and Policy</div>
+    <div class="box thm"><div class="bl t">Key Properties Under Additional Assumptions</div>
+    <ul class="bl-list">
+      <li>If u is continuous and G has closed graph, V is continuous</li>
+      <li>If u is strictly concave and G is convex-valued, V is strictly concave and the policy function π is a function (not a correspondence)</li>
+      <li>If u and G are differentiable, V is differentiable and Benveniste-Scheinkman formula gives V'(x₀) = ∂L/∂x₀ evaluated at the optimum (an envelope theorem for DP)</li>
+    </ul>
+    </div>
+    <div class="box ex"><div class="bl e">Growth Model Revisited</div>
+    For the growth model with u = ln(C), F(K) = 2√K: the value function is V(K) = A + B ln(K) for constants A,B. Substituting into the Bellman equation gives a system for A and B. The policy function is K' = β/2 · F(K) = β√K (save fraction β/2 of output). The contraction mapping theorem guarantees this solution is unique.
+    </div>
+  </div>
+  <div style="text-align:right;margin-top:8px;"><button class="btn gold" onclick="go(5)">Take the Quiz! →</button></div>
+</div>
+
+<!-- ===== QUIZ ===== -->
+<div class="lec" id="l5">
+  <div class="card">
+    <div class="card-title">📝 Quiz — Lectures 7–11</div>
+    <div class="score" id="sc">Score: 0 / 0</div>
+    <div id="qc"></div>
+  </div>
+</div>
+
+</div><!-- end main -->
+
+<script>
+const lecs=document.querySelectorAll('.lec');
+const navBtns=document.querySelectorAll('.lec-nav button');
+function go(i){lecs.forEach((l,j)=>l.classList.toggle('active',j===i));navBtns.forEach((b,j)=>b.classList.toggle('active',j===i));window.scrollTo({top:0,behavior:'smooth'});if(i===5)initQ();}
+
+const QS=[
+  {q:"What does the Implicit Function Theorem (Theorem 7.5) allow us to do?",
+   opts:["Invert any matrix","Locally express some variables as functions of others when the relevant sub-Jacobian is invertible","Find the global maximum of any function","Differentiate discontinuous functions"],
+   ans:1,fb:"Correct! The IFT says: if f(x,y)=z and the last K columns of Df(a,b) are independent (invertible sub-Jacobian), then y is locally a continuously differentiable function of (x,z). The key condition is that the derivative with respect to the 'endogenous' variables is invertible."},
+  {q:"The Envelope Theorem (Lecture 7) for unconstrained max F(b) = max_x f(x,b) says:",
+   opts:["DF(b) = Dₓf(x(b),b) · Dx(b)","DF(b) = D_b f(x(b), b) — only the direct effect of b matters","DF(b) = D²f(x(b),b)","DF(b) = 0 at the optimum"],
+   ans:1,fb:"Correct! DF(b) = D_b f(x(b),b). The envelope theorem says you can ignore how x changes with b because Dₓf = 0 at the maximum. Only the direct partial derivative of f with respect to b (at the optimum x) matters."},
+  {q:"Theorem 8.1 says that for a concave function f on a convex set:",
+   opts:["Every critical point is a local minimum","Every local maximum is a global maximum","There are no critical points","f is everywhere differentiable"],
+   ans:1,fb:"Correct! Concavity converts local optimality to global: any local max of a concave function is a global max. This is why concavity assumptions are so common in economics — they simplify the optimization analysis enormously."},
+  {q:"The Kuhn-Tucker conditions for max f(x) s.t. gₖ(x) ≤ āₖ include:",
+   opts:["λₖ can be any real number","λₖ ≥ 0 and λₖ = 0 if gₖ(x̄) < āₖ (complementary slackness)","The constraint must be an equality at the optimum","λₖ = ∂f/∂gₖ always"],
+   ans:1,fb:"Correct! KT conditions: λ ∈ ℝᴷ₊ (non-negative multipliers), complementary slackness (λₖ=0 if gₖ(x̄)&lt;āₖ — non-binding constraints get zero multiplier), and x̄ maximizes the Lagrangian L = f(x) − Σλₖgₖ(x) over C."},
+  {q:"The Lagrange multiplier λₖ(a) in the constrained optimization problem (with equality constraints) equals:",
+   opts:["The second derivative of f at the optimum","The rate of change of the maximized value with respect to constraint level aₖ","The value of x at the optimum","The constraint qualification condition"],
+   ans:1,fb:"Correct! λₖ(a) = ∂F(a)/∂aₖ where F(a) = f(x(a)). The Lagrange multiplier is the shadow price of constraint k — how much the maximum value increases if constraint level aₖ is relaxed by one unit."},
+  {q:"The Minkowski Separation Theorem (Theorem 9.5) states:",
+   opts:["Any two sets in ℝᴺ can be separated","If X and Y are convex and int(X)∩Y = ∅, then ∃ non-zero p with p·x ≤ p·y for all x∈X, y∈Y","Two compact sets are always separable","Convex sets have non-empty interiors"],
+   ans:1,fb:"Correct! Minkowski separation: if both sets are convex and the interior of X doesn't intersect Y, there exists a non-zero separating vector p. This is used to prove the necessity of KT conditions — the KT multipliers come from a hyperplane separating feasible improvements from infeasible ones."},
+  {q:"The Bellman equation for an infinite-horizon DP problem is:",
+   opts:["V(x₀) = max_{xₜ} Σβᵗu(xₜ,xₜ₊₁) in one step","V(x₀) = max_{x₁∈G(x₀)} [u(x₀,x₁) + βV(x₁)]","V(x₀) = u(x₀,x₁) for the optimal x₁","V(x₀) = βV(x₁) + constant"],
+   ans:1,fb:"Correct! Bellman equation: V(x₀) = max_{x₁∈G(x₀)} [u(x₀,x₁) + βV(x₁)]. This is a functional equation that V satisfies. It converts infinite-horizon optimization to a sequence of single-period problems. Theorem 11.1 shows V is the UNIQUE bounded solution."},
+  {q:"The Contraction Mapping Theorem guarantees:",
+   opts:["A maximum exists for any continuous function","If T is a contraction on a complete metric space, ∃ unique fixed point T(x*)=x*, and iterates converge to x*","The Bellman operator has multiple fixed points","Concave functions have unique maxima"],
+   ans:1,fb:"Correct! The Contraction Mapping Theorem (Banach): on a complete metric space, a contraction T (with d(Tx,Ty)≤βd(x,y), β&lt;1) has a unique fixed point x*, and the iterates Tⁿx₀→x* at geometric rate βⁿ. Applied to the Bellman operator, this proves existence and uniqueness of the value function V."},
+  {q:"In the growth model example (Lecture 10), with F(K)=2√K and u=ln(C), the optimal savings rate s = β/2 is found by:",
+   opts:["Guessing a constant-savings-rate policy and verifying it satisfies the Euler equation and feasibility","Taking the derivative of utility","Setting the value function equal to zero","Applying the implicit function theorem to F(K)"],
+   ans:0,fb:"Correct! The solution method: guess a constant-savings-rate policy Kₜ=s·F(K_{t-1}), derive the implied consumption path Cₜ=(1−s)F(K_{t-1}), substitute into the Euler equation 1/Cₜ=β·(1/Cₜ₊₁)·(1/√Kₜ), and solve for s=β/2. Then verify this program is optimal."},
+  {q:"Theorem 7.6 (Lagrange Multiplier Theorem) requires a 'constraint qualification' which means:",
+   opts:["The objective function must be concave","The constraint gradients Dg₁(x̄),…,DgK(x̄) must be linearly independent","The Hessian must be positive definite","The constraints must all be active at the optimum"],
+   ans:1,fb:"Correct! The constraint qualification is: Dg₁(x̄),…,DgK(x̄) are linearly independent. Without this, the Lagrange multiplier theorem can fail (example in notes: g₁=−x₁+x₂², g₂=x₁+x₂² — the gradients at (0,0) sum to zero, so they're dependent, and no Lagrange multipliers exist for max x₂ at (0,0))."}
+];
+
+let answered=[],score=0,init=false;
+function initQ(){if(init)return;init=true;answered=new Array(QS.length).fill(false);score=0;renderQ(0);}
+function renderQ(i){
+  if(i>=QS.length){document.getElementById('qc').innerHTML=`<div class="box thm" style="text-align:center;padding:28px;"><div class="bl t">🎉 Quiz Complete!</div><p style="font-size:20px;margin:14px 0;"><strong>Score: ${score}/${QS.length}</strong></p><p>${score===QS.length?"Perfect! Graduate-level mastery achieved! 🏆":score>=7?"Strong work — Yale-ready!":"Review the lectures and try again."}</p><button class="btn" style="margin-top:16px;" onclick="resetQ()">Try Again</button></div>`;return;}
+  const q=QS[i];
+  document.getElementById('qc').innerHTML=`<div style="margin-bottom:10px;color:var(--muted);font-size:13px;font-family:Arial;">Question ${i+1} of ${QS.length}</div><div class="quiz-q">${q.q}</div><div class="quiz-opts">${q.opts.map((o,j)=>`<button class="qopt" id="o${i}${j}" onclick="ansQ(${i},${j})">${o}</button>`).join('')}</div><div class="qfb" id="fb${i}"></div><div class="qnxt" id="nx${i}"><button class="btn" onclick="renderQ(${i+1})">${i===QS.length-1?'See Results →':'Next →'}</button></div>`;
+}
+function ansQ(i,chosen){
+  if(answered[i])return;answered[i]=true;
+  const q=QS[i];const ok=chosen===q.ans;
+  if(ok)score++;
+  document.getElementById('sc').textContent=`Score: ${score}/${answered.filter(Boolean).length}`;
+  for(let j=0;j<q.opts.length;j++){const b=document.getElementById(`o${i}${j}`);if(j===q.ans)b.classList.add('ok');else if(j===chosen&&!ok)b.classList.add('no');b.disabled=true;}
+  const fb=document.getElementById(`fb${i}`);fb.className=`qfb show ${ok?'ok':'no'}`;fb.innerHTML=`<strong>${ok?'✓ Correct!':'✗ Not quite.'}</strong> ${q.fb}`;
+  document.getElementById(`nx${i}`).classList.add('show');
+}
+function resetQ(){init=false;document.getElementById('sc').textContent='Score: 0 / 0';initQ();}
+</script>
+</body>
+</html>
